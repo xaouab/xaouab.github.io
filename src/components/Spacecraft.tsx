@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useFrame, useLoader, useThree } from '@react-three/fiber';
+import { useFrame, useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Group, Object3D, ShaderMaterial, Vector3 } from 'three';
+import { Group, ShaderMaterial } from 'three';
 import * as THREE from 'three';
 import FireParticles from './FireParticles';
+import type { FlightController } from '../flight/FlightController';
 import { useNavigationStore } from '../stores/navigationStore';
+
+// Keeps the ship readable next to the planets (radius 0.5) while orbiting.
+const SHIP_SCALE = 0.7;
 
 const flameVertexShader = `
   uniform float uTime;
@@ -54,22 +58,16 @@ const flameFragmentShader = `
 `;
 
 interface SpacecraftProps {
-  onForwardUpdate?: (forward: Vector3) => void;
+  flight: FlightController;
 }
 
-const Spacecraft: React.FC<SpacecraftProps> = ({ onForwardUpdate }) => {
+const Spacecraft: React.FC<SpacecraftProps> = ({ flight }) => {
   const groupRef = useRef<Group>(null);
   const flameGroupRef = useRef<Group>(null);
-  const { camera } = useThree();
   const gltf = useLoader(GLTFLoader, '/models/dreamchaser.glb');
-
-  const offset = useMemo(() => new Vector3(-1, -2, -5), []);
-  const velocity = useRef(new Vector3());
-  const prevCameraPos = useRef(new Vector3());
-  const prevCameraLookAt = useRef(new Vector3());
   const enginePower = useRef(0.35);
 
-  const { isTransitioning } = useNavigationStore();
+  const isTransitioning = useNavigationStore((s) => s.isTransitioning);
 
   const flameMaterial = useMemo(
     () =>
@@ -103,45 +101,17 @@ const Spacecraft: React.FC<SpacecraftProps> = ({ onForwardUpdate }) => {
     };
   }, [flameMaterial, gltf]);
 
-  useEffect(() => {
-    prevCameraPos.current.copy(camera.position);
-    camera.getWorldDirection(prevCameraLookAt.current);
-  }, [camera]);
-
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
-    const targetPosition = new Vector3();
-    camera.localToWorld(targetPosition.copy(offset));
+    // Pose comes straight from the flight model (already advanced this frame).
+    groupRef.current.position.copy(flight.position);
+    groupRef.current.quaternion.copy(flight.orientation);
 
-    velocity.current.subVectors(camera.position, prevCameraPos.current);
-
-    const currentLookDir = new Vector3();
-    camera.getWorldDirection(currentLookDir);
-
-    groupRef.current.position.copy(targetPosition);
-
-    const direction =
-      velocity.current.length() > 0.01
-        ? velocity.current.clone().normalize()
-        : currentLookDir.clone();
-
-    onForwardUpdate?.(direction);
-
-    const lookAtPos = new Vector3(
-      groupRef.current.position.x + direction.x,
-      groupRef.current.position.y + direction.y,
-      groupRef.current.position.z + direction.z
-    );
-
-    const tempObj = new Object3D();
-    tempObj.position.copy(groupRef.current.position);
-    tempObj.lookAt(lookAtPos);
-    groupRef.current.quaternion.slerp(tempObj.quaternion, 0.04);
-
-    const speed = velocity.current.length() / Math.max(delta, 1e-3);
-    const speedFactor = Math.min(speed / 6, 1);
-    const targetPower = isTransitioning ? 1 : 0.35 + speedFactor * 0.25;
+    // Engine: idle glow, flares when accelerating, dims while braking.
+    const speedFactor = Math.min(flight.speed / 30, 1);
+    const throttle = THREE.MathUtils.clamp(flight.thrust / 12, -1, 1);
+    const targetPower = THREE.MathUtils.clamp(0.35 + speedFactor * 0.35 + throttle * 0.45, 0.12, 1);
 
     enginePower.current = THREE.MathUtils.damp(enginePower.current, targetPower, 6, delta);
 
@@ -163,13 +133,10 @@ const Spacecraft: React.FC<SpacecraftProps> = ({ onForwardUpdate }) => {
       const stretch = 0.9 + enginePower.current * 1.5;
       flameGroupRef.current.scale.set(1, stretch, 1);
     }
-
-    prevCameraPos.current.copy(camera.position);
-    prevCameraLookAt.current.copy(currentLookDir);
   });
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} scale={SHIP_SCALE}>
       <primitive object={gltf.scene} scale={0.1} rotation={[0, Math.PI, 0]} />
 
       <group ref={flameGroupRef} position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>

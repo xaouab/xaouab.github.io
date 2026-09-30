@@ -5,17 +5,15 @@ import { useLanguageStore } from '../stores/languageStore';
 import '../styles/BackButton.css';
 
 const BackButton: React.FC = () => {
-  const { setView, isTransitioning } = useNavigationStore();
+  const { setView } = useNavigationStore();
   const { t } = useLanguageStore();
 
   const handleBack = () => {
-    if (!isTransitioning) {
-      setView('home');
-    }
+    setView('home');
   };
 
   return (
-    <button className="back-button" onClick={handleBack} disabled={isTransitioning}>
+    <button className="back-button" onClick={handleBack}>
       {t('navigation.back')}
     </button>
   );

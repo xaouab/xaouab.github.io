@@ -6,7 +6,7 @@ import '../styles/MobileDestinationMenu.css';
 
 const MobileDestinationMenu: React.FC = () => {
   const { currentLanguage } = useLanguageStore();
-  const { setView, currentView, selectedStarId, isTransitioning } = useNavigationStore();
+  const { setView, currentView, selectedStarId } = useNavigationStore();
 
   const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(false);
@@ -31,8 +31,6 @@ const MobileDestinationMenu: React.FC = () => {
   if (!isMobile) return null;
 
   const handleSelect = (id: string) => {
-    if (isTransitioning) return;
-
     setView('star', id);
     setOpen(false);
   };
@@ -60,11 +58,10 @@ const MobileDestinationMenu: React.FC = () => {
             type="button"
             className={`mobile-destination-item ${currentView === 'home' ? 'active' : ''}`}
             onClick={() => {
-              if (isTransitioning) return;
               setView('home');
               setOpen(false);
             }}
-            disabled={isTransitioning || currentView === 'home'}
+            disabled={currentView === 'home' || currentView === 'start'}
           >
             <span>System Orbit</span>
             <span>HOME</span>
@@ -78,7 +75,7 @@ const MobileDestinationMenu: React.FC = () => {
                 type="button"
                 className={`mobile-destination-item ${active ? 'active' : ''}`}
                 onClick={() => handleSelect(star.id)}
-                disabled={isTransitioning || active}
+                disabled={active}
               >
                 <span>{star.title[currentLanguage]}</span>
                 <span>{star.code}</span>

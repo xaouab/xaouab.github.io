@@ -20,7 +20,8 @@ const Star: React.FC<StarData> = ({ id, position, texture, title, color, metalne
   const isSelected = currentView === 'star' && selectedStarId === id;
   const isReturningToHome = currentView === 'home' && isTransitioning;
   const showPlanetLabel = currentView !== 'star' && (!isMobile || currentView === 'home' || currentView === 'start');
-  const canInteract = !isTransitioning && currentView !== 'star';
+  // The ship can be redirected mid-flight, so planets stay clickable while travelling.
+  const canInteract = currentView !== 'star';
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
