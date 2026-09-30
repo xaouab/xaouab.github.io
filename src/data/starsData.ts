@@ -163,8 +163,8 @@ export const starsData: StarData[] = [
             subtitle: "Programming Language",
             description: "Cherry is my own interpreted and typed programming language with a C-style syntax. I built it to deeply understand language design, parsing, interpretation, typing rules, runtime behavior, and tooling constraints.\n\nProject scope includes:\n[color=lightblue]- Lexer, parser, AST pipeline, and execution model[/color]\n[color=lightblue]- Type-aware language features and runtime semantics[/color]\n[color=lightblue]- Error reporting and practical developer ergonomics[/color]\n[color=lightblue]- Open-source distribution with playground support[/color]\n\nThis project is one of my strongest examples of long-form engineering work: architecture decisions, iterative refactors, and attention to developer experience.\n\n[img=/img/cherry.webp]",
             links: [
-              { text: 'Online Playground & Compiler', link: 'https://kateonbxsh.github.io/Cherry/' },
-              { text: 'GitHub Repo', link: 'https://github.com/kateonbxsh/Cherry' },
+              { text: 'Online Playground & Compiler', link: 'https://xaouab.github.io/Cherry/' },
+              { text: 'GitHub Repo', link: 'https://github.com/xaouab/Cherry' },
             ],
           },
           {
@@ -188,7 +188,7 @@ export const starsData: StarData[] = [
             subtitle: "AI Library",
             description: "MiniGPT is my from-scratch learning implementation of GPT-style model concepts. The goal was educational depth: not just using AI APIs, but understanding model internals end-to-end.\n\nFocus areas:\n[color=lightblue]- Transformer fundamentals and token flow[/color]\n[color=lightblue]- Training loop concepts and optimization logic[/color]\n[color=lightblue]- Practical experimentation to validate intuition[/color]\n\nThis project strengthened my foundations in ML engineering and helped me reason better about LLM limitations and tradeoffs.",
             links: [
-              { text: 'GitHub Repo', link: 'https://github.com/kateonbxsh/MiniGPT' },
+              { text: 'GitHub Repo', link: 'https://github.com/xaouab/MiniGPT' },
             ],
           },
           {
@@ -196,8 +196,8 @@ export const starsData: StarData[] = [
             subtitle: "Online Musical Quiz",
             description: "Open-source browser music quiz with a persistent leaderboard and quick game loop.\n\nHighlights:\n[color=lightblue]- Lightweight front-end architecture for fast sessions[/color]\n[color=lightblue]- Persistent ranking/score logic[/color]\n[color=lightblue]- Friendly casual UX designed for replayability[/color]\n\nBuilt as a clean, approachable web project with production-like polish despite a simple stack.\n\n[color=lightgreen]Tech: HTML, CSS, JavaScript[/color]\n\n[img=/img/tunewave.webp]",
             links: [
-              { text: 'Play', link: 'https://kateonbxsh.github.io/Tunewave' },
-              { text: 'GitHub Repo', link: 'https://github.com/kateonbxsh/Tunewave' },
+              { text: 'Play', link: 'https://xaouab.github.io/Tunewave' },
+              { text: 'GitHub Repo', link: 'https://github.com/xaouab/Tunewave' },
             ],
           },
           {
@@ -205,7 +205,7 @@ export const starsData: StarData[] = [
             subtitle: "CLI Tool",
             description: "CLI automation tool for semantic version workflows integrated with Git and npm.\n\nIt reduces repetitive release tasks by standardizing:\n[color=lightblue]- Version bumping strategy[/color]\n[color=lightblue]- Git tagging and commit flow coordination[/color]\n[color=lightblue]- npm publishing preparation[/color]\n\nDesigned to save time, reduce manual release mistakes, and keep project versioning consistent across teams.\n\n[color=lightgreen]Tech: JavaScript, Node.js[/color]",
             links: [
-              { text: 'GitHub Repo', link: 'https://github.com/kateonbxsh/VersionFlow' },
+              { text: 'GitHub Repo', link: 'https://github.com/xaouab/VersionFlow' },
               { text: 'NPM Package', link: 'https://www.npmjs.com/package/versionflow' },
             ],
           },
@@ -214,7 +214,7 @@ export const starsData: StarData[] = [
             subtitle: "DLL Extension",
             description: "Native DLL wrapper around the Discord SDK to expose Rich Presence features in GameMaker projects.\n\nWhy it matters:\n[color=lightblue]- Bridges engine-level limitations with native extension code[/color]\n[color=lightblue]- Makes social status integration accessible to GameMaker workflows[/color]\n[color=lightblue]- Demonstrates practical C++ interop for game tooling[/color]\n\nA focused utility project that solves a real developer pain point for indie game pipelines.\n\n[color=lightgreen]Tech: GML, C++[/color]",
             links: [
-              { text: 'GitHub Repo', link: 'https://github.com/kateonbxsh/DiscordPresency' },
+              { text: 'GitHub Repo', link: 'https://github.com/xaouab/DiscordPresency' },
             ],
           },
           {
@@ -222,8 +222,8 @@ export const starsData: StarData[] = [
             subtitle: "3D Web Application (just like this one)",
             description: "3D web experience built for Nuit de l'Informatique 2024 in a constrained 16-hour delivery window.\n\nCore work:\n[color=lightblue]- Interactive 3D body visualization in Three.js[/color]\n[color=lightblue]- Custom GLSL shader work for animated ocean-like effects[/color]\n[color=lightblue]- UI integration for user-friendly exploration[/color]\n\nA rapid-build project where visual experimentation and execution speed had to coexist.\n\n[color=lightgreen]Tech: JavaScript, Three.js, GLSL[/color]\n\n[img=/img/bluepulse.webp]",
             links: [
-              { text: 'Live Demo', link: 'https://kateonbxsh.github.io/BluePulse/' },
-              { text: 'GitHub Repo', link: 'https://github.com/kateonbxsh/BluePulse'}
+              { text: 'Live Demo', link: 'https://xaouab.github.io/BluePulse/' },
+              { text: 'GitHub Repo', link: 'https://github.com/xaouab/BluePulse'}
             ],
           },
           {
@@ -231,7 +231,7 @@ export const starsData: StarData[] = [
             subtitle: "Online Interactive Escape Game",
             description: "Interactive browser experience inspired by escape-game mechanics and designed around intercultural learning.\n\nProject intent:\n[color=lightblue]- Turn educational content into active exploration[/color]\n[color=lightblue]- Build progression and puzzle logic for engagement[/color]\n[color=lightblue]- Keep the experience playful without losing learning value[/color]\n\nA good example of design + logic integration for educational products.\n\n[color=lightgreen]Tech: JavaScript, GML[/color]\n\n[img=/img/culturelock.webp]",
             links: [
-              { text: 'Play', link: 'https://kateonbxsh.github.io/CultureLock/' },
+              { text: 'Play', link: 'https://xaouab.github.io/CultureLock/' },
             ],
           },
         ],
@@ -244,8 +244,8 @@ export const starsData: StarData[] = [
             subtitle: 'Langage de programmation',
             description: "Cherry est mon propre langage interprete et type avec syntaxe style C. Je l'ai cree pour comprendre en profondeur le design de langage: parsing, execution, typage, runtime et outillage.\n\nPortee du projet:\n[color=lightblue]- Lexer, parser, AST et moteur d'execution[/color]\n[color=lightblue]- Fonctions de typage et regles semantiques[/color]\n[color=lightblue]- Gestion d'erreurs et ergonomie dev[/color]\n[color=lightblue]- Distribution open-source avec playground[/color]\n\nC'est un de mes meilleurs exemples de travail long terme: decisions d'architecture, refactors iteratifs et attention a l'experience developpeur.\n\n[img=/img/cherry.webp]",
             links: [
-              { text: 'Playground & compilateur en ligne', link: 'https://kateonbxsh.github.io/Cherry/' },
-              { text: 'Repo GitHub', link: 'https://github.com/kateonbxsh/Cherry' },
+              { text: 'Playground & compilateur en ligne', link: 'https://xaouab.github.io/Cherry/' },
+              { text: 'Repo GitHub', link: 'https://github.com/xaouab/Cherry' },
             ],
           },
           {
@@ -269,7 +269,7 @@ export const starsData: StarData[] = [
             subtitle: 'Librairie IA',
             description: "MiniGPT est mon implementation d'apprentissage from-scratch de concepts GPT. Objectif: comprendre les mecanismes internes plutot que juste consommer une API.\n\nAxes travailles:\n[color=lightblue]- Fondamentaux transformer et flux de tokens[/color]\n[color=lightblue]- Boucle d'entrainement et logique d'optimisation[/color]\n[color=lightblue]- Experimentations pour valider les intuitions[/color]\n\nCe projet a consolide mes bases en IA/LLM et ma capacite a analyser les limites techniques des modeles.",
             links: [
-              { text: 'Repo GitHub', link: 'https://github.com/kateonbxsh/MiniGPT' },
+              { text: 'Repo GitHub', link: 'https://github.com/xaouab/MiniGPT' },
             ],
           },
           {
@@ -277,8 +277,8 @@ export const starsData: StarData[] = [
             subtitle: 'Quiz musical en ligne',
             description: "Quiz musical navigateur open-source avec leaderboard persistant et boucle de jeu rapide.\n\nPoints cles:\n[color=lightblue]- Architecture front-end legere pour sessions fluides[/color]\n[color=lightblue]- Logique de score et classement persistant[/color]\n[color=lightblue]- UX casual orientee rejouabilite[/color]\n\nUn projet web simple en stack, mais propre dans l'execution produit.\n\n[color=lightgreen]Technos : HTML, CSS, JavaScript[/color]\n\n[img=/img/tunewave.webp]",
             links: [
-              { text: 'Jouer', link: 'https://kateonbxsh.github.io/Tunewave/' },
-              { text: 'Repo GitHub', link: 'https://github.com/kateonbxsh/Tunewave' },
+              { text: 'Jouer', link: 'https://xaouab.github.io/Tunewave/' },
+              { text: 'Repo GitHub', link: 'https://github.com/xaouab/Tunewave' },
             ],
           },
           {
@@ -286,7 +286,7 @@ export const starsData: StarData[] = [
             subtitle: 'Outil CLI',
             description: "Outil CLI d'automatisation pour les workflows de versionning semantique avec Git et npm.\n\nIl standardise:\n[color=lightblue]- Les increments de version[/color]\n[color=lightblue]- Le flux commits/tags Git[/color]\n[color=lightblue]- La preparation de publication npm[/color]\n\nBut: gagner du temps, reduire les erreurs manuelles et rendre les releases plus coherentes.\n\n[color=lightgreen]Technos : JavaScript, Node.js[/color]",
             links: [
-              { text: 'GitHub', link: 'https://github.com/kateonbxsh/VersionFlow' },
+              { text: 'GitHub', link: 'https://github.com/xaouab/VersionFlow' },
               { text: 'NPM Package', link: 'https://www.npmjs.com/package/versionflow' },
             ],
           },
@@ -295,7 +295,7 @@ export const starsData: StarData[] = [
             subtitle: 'Extension DLL',
             description: "Wrapper DLL natif autour du SDK Discord pour exposer le Rich Presence dans des projets GameMaker.\n\nInteret technique:\n[color=lightblue]- Contourner les limites moteur via extension native[/color]\n[color=lightblue]- Rendre l'integration sociale accessible en pipeline indie[/color]\n[color=lightblue]- Demontrer l'interop C++/GML sur un cas concret[/color]\n\nPetit projet utilitaire mais a forte valeur pratique pour devs jeu.\n\n[color=lightgreen]Technos : GML, C++[/color]",
             links: [
-              { text: 'GitHub', link: 'https://github.com/kateonbxsh/DiscordPresency' },
+              { text: 'GitHub', link: 'https://github.com/xaouab/DiscordPresency' },
             ],
           },
           {
@@ -303,8 +303,8 @@ export const starsData: StarData[] = [
             subtitle: 'Appli web 3D (comme ce site)',
             description: "Experience web 3D realisee pour la Nuit de l'Informatique 2024 en 16 heures.\n\nTravail principal:\n[color=lightblue]- Visualisation 3D interactive (Three.js)[/color]\n[color=lightblue]- Shader GLSL personnalise pour effet ocean anime[/color]\n[color=lightblue]- Interface utilisateur pour exploration fluide[/color]\n\nUn projet de sprint ou experimentation visuelle et execution rapide devaient coexister.\n\n[color=lightgreen]Technos : JavaScript, Three.js, GLSL[/color]\n\n[img=/img/bluepulse.webp]",
             links: [
-              { text: 'Démo live', link: 'https://kateonbxsh.github.io/BluePulse/' },
-              { text: 'GitHub', link: 'https://github.com/kateonbxsh/BluePulse' },
+              { text: 'Démo live', link: 'https://xaouab.github.io/BluePulse/' },
+              { text: 'GitHub', link: 'https://github.com/xaouab/BluePulse' },
             ],
           },
           {
@@ -312,7 +312,7 @@ export const starsData: StarData[] = [
             subtitle: 'Escape game interactif en ligne',
             description: "Experience navigateur inspiree des mecaniques d'escape game, centree sur l'apprentissage interculturel.\n\nObjectifs produit:\n[color=lightblue]- Transformer du contenu educatif en exploration active[/color]\n[color=lightblue]- Construire progression et logique d'enigmes engageantes[/color]\n[color=lightblue]- Conserver un ton ludique sans perdre le fond pedagogique[/color]\n\nBon exemple d'integration design + logique pour un projet edtech interactif.\n\n[color=lightgreen]Technos : JavaScript, GML[/color]\n\n[img=/img/culturelock.webp]",
             links: [
-              { text: 'Jouer', link: 'https://kateonbxsh.github.io/CultureLock/' },
+              { text: 'Jouer', link: 'https://xaouab.github.io/CultureLock/' },
             ],
           },
         ],
@@ -420,7 +420,7 @@ export const starsData: StarData[] = [
             title: 'GitHub',
             description: "Main public code portfolio. You can review repositories, project history, and how I structure real implementations over time.",
             links: [
-              { text: 'github.com/kateonbxsh', link: 'https://github.com/kateonbxsh' },
+              { text: 'github.com/xaouab', link: 'https://github.com/xaouab' },
             ],
           },
           {
@@ -464,7 +464,7 @@ export const starsData: StarData[] = [
             title: 'GitHub',
             description: "Mon portfolio code principal. Tu peux y voir les repos publics, l'historique et ma facon de structurer des implementations concretes.",
             links: [
-              { text: 'github.com/kateonbxsh', link: 'https://github.com/kateonbxsh' },
+              { text: 'github.com/xaouab', link: 'https://github.com/xaouab' },
             ],
           },
           {

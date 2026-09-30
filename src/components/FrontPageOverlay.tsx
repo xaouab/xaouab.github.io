@@ -17,7 +17,7 @@ const FrontPageOverlay: React.FC = () => {
       <div className="star-details-container">
           <div className="star-header">
               <h2>Aouab Admou</h2>
-              <span className="star-code">kateonbxsh</span>
+              <span className="star-code">xaouab</span>
             </div>
       </div>
     
