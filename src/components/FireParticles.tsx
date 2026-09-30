@@ -2,7 +2,8 @@ import { useFrame } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-const FireParticles: React.FC<{ intensity: 'high' | 'low' }> = ({ intensity }) => {
+// Point size is in world units and ignores parent scale, so scaled ships pass sizeScale.
+const FireParticles: React.FC<{ intensity: 'high' | 'low'; sizeScale?: number }> = ({ intensity, sizeScale = 1 }) => {
   const pointsRef = useRef<THREE.Points>(null);
 
   const count = intensity === 'high' ? 400 : 100;
@@ -92,7 +93,7 @@ const FireParticles: React.FC<{ intensity: 'high' | 'low' }> = ({ intensity }) =
       <pointsMaterial
         transparent
         vertexColors
-        size={intensity === 'high' ? 0.05 : 0.04}
+        size={(intensity === 'high' ? 0.05 : 0.04) * sizeScale}
         sizeAttenuation
         depthWrite={false}
         opacity={0.7}

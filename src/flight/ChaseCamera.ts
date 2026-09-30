@@ -12,6 +12,11 @@
 import { MathUtils, PerspectiveCamera, Quaternion, Vector3 } from 'three';
 import type { FlightController } from './FlightController';
 
+// The ship is tiny next to the planets; the whole rig is sized to the ship so
+// it still reads at the same size on screen.
+export const SHIP_SCALE = 0.21;
+const RIG_SCALE = SHIP_SCALE / 0.7;
+
 interface Framing {
   /** 0 = look where the ship is going, 1 = look at the focus. */
   focusWeight: number;
@@ -19,17 +24,23 @@ interface Framing {
   height: number;
 }
 
-const HOME: Framing = { focusWeight: 0.82, distance: 3.4, height: 0.95 };
-const PLANET_ORBIT: Framing = { focusWeight: 0.45, distance: 2.3, height: 0.55 };
-const DEPARTURE: Framing = { focusWeight: 0.3, distance: 2.8, height: 0.7 };
-const TRANSFER_TO_PLANET_START: Framing = { focusWeight: 0.2, distance: 2.8, height: 0.7 };
-const TRANSFER_TO_HOME_START: Framing = { focusWeight: 0.25, distance: 3.0, height: 0.8 };
+const rig = (focusWeight: number, distance: number, height: number): Framing => ({
+  focusWeight,
+  distance: distance * RIG_SCALE,
+  height: height * RIG_SCALE,
+});
+
+const HOME = rig(0.82, 3.4, 0.95);
+const PLANET_ORBIT = rig(0.45, 2.3, 0.55);
+const DEPARTURE = rig(0.3, 2.8, 0.7);
+const TRANSFER_TO_PLANET_START = rig(0.2, 2.8, 0.7);
+const TRANSFER_TO_HOME_START = rig(0.25, 3.0, 0.8);
 
 const BASE_FOV = 70;
 const MAX_FOV_KICK = 14;
 const FOV_PER_SPEED = 0.35;
-const PULLBACK_PER_SPEED = 0.035;
-const MAX_PULLBACK = 1.6;
+const PULLBACK_PER_SPEED = 0.035 * RIG_SCALE;
+const MAX_PULLBACK = 1.6 * RIG_SCALE;
 const CAMERA_ROLL = 0.18; // fraction of the ship's bank the camera leans into
 const MAX_PITCH = 0.8; // |y| of the view direction, keeps lookAt away from the pole
 

@@ -4,11 +4,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Group, ShaderMaterial } from 'three';
 import * as THREE from 'three';
 import FireParticles from './FireParticles';
+import { SHIP_SCALE } from '../flight/ChaseCamera';
 import type { FlightController } from '../flight/FlightController';
 import { useNavigationStore } from '../stores/navigationStore';
-
-// Keeps the ship readable next to the planets (radius 0.5) while orbiting.
-const SHIP_SCALE = 0.7;
 
 const flameVertexShader = `
   uniform float uTime;
@@ -146,7 +144,7 @@ const Spacecraft: React.FC<SpacecraftProps> = ({ flight }) => {
         </mesh>
 
         <group position={[0, .28, 0]}>
-          <FireParticles intensity={isTransitioning ? 'high' : 'low'} />
+          <FireParticles intensity={isTransitioning ? 'high' : 'low'} sizeScale={SHIP_SCALE} />
         </group>
       </group>
     </group>

@@ -31,14 +31,14 @@ interface SpeedProfile {
 export const HOME_CENTER = new Vector3(0, -4, 0);
 export const HOME_RADIUS = 90;
 const HOME_TILT = 0.2; // rad, tilts the orbit so it sweeps above/below the system
-const HOME_ANGULAR_SPEED = 0.05; // rad/s
+const HOME_ANGULAR_SPEED = 0.025; // rad/s
 
 // Planet orbit: flat circle at the planet's height.
-export const PLANET_ORBIT_RADIUS = 1.6;
-const PLANET_ANGULAR_SPEED = 0.35; // rad/s
-const PLANET_CLEARANCE = 1.1; // min distance a path may pass from any planet center
+export const PLANET_ORBIT_RADIUS = 1.15;
+const PLANET_ANGULAR_SPEED = 0.16; // rad/s
+const PLANET_CLEARANCE = 0.85; // min distance a path may pass from any planet center
 // The ship brakes to this speed at the join, then the orbit bleeds off the rest.
-const PLANET_ARRIVAL_SPEED = 1.4;
+const PLANET_ARRIVAL_SPEED = 0.9;
 
 // Arrival: orbit angular speed starts at whatever speed the ship arrived with
 // and settles to the nominal speed at this rate.
@@ -128,7 +128,7 @@ const hermiteTangent = (p0: Vector3, m0: Vector3, p1: Vector3, m1: Vector3, u: n
 const PATH_SAMPLES = 64;
 const EVAL_SAMPLES = 64;
 // Tightest turn radius a curve may have anywhere...
-const MIN_TURN_RADIUS = 0.8;
+const MIN_TURN_RADIUS = 0.6;
 // ...and near its start, where the ship still carries its current speed (v² / a).
 const START_LATERAL_ACCEL = 60;
 const START_SPAN = 0.3; // fraction of the curve (in u) treated as "near the start"
