@@ -2,26 +2,36 @@
 export const translations = {
   en: {
     frontPage: {
-      subtitle: 'Click on a planet to view portfolio',
+      role: 'Software engineer building mission control, real-time and 3D systems',
+      subtitle: 'Choose a planet to fly there',
+    },
+    flight: {
+      approaching: 'En route to',
+      returning: 'Returning to',
     },
     navigation: {
-      back: '← Back',
-    },
-    languageSwitch: {
-      english: 'English',
-      french: 'Français',
+      overview: 'Overview',
+      close: 'Close',
+      previous: 'Previous',
+      next: 'Next',
+      backToStart: 'Start over',
     },
   },
   fr: {
     frontPage: {
-      subtitle: 'Cliquez sur une planète pour voir le portfolio',
+      role: 'Ingénieur logiciel : contrôle de mission, temps réel et 3D',
+      subtitle: 'Choisissez une planète pour vous y rendre',
+    },
+    flight: {
+      approaching: 'En route vers',
+      returning: 'Retour vers',
     },
     navigation: {
-      back: '← Retour',
-    },
-    languageSwitch: {
-      english: 'English',
-      french: 'Français',
+      overview: 'Vue d’ensemble',
+      close: 'Fermer',
+      previous: 'Précédent',
+      next: 'Suivant',
+      backToStart: 'Recommencer',
     },
   },
 };

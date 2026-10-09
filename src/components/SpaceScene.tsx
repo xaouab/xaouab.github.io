@@ -7,6 +7,7 @@ import { CubeTextureLoader, Vector3 } from 'three';
 import { starsData } from '../data/starsData';
 import { ChaseCamera } from '../flight/ChaseCamera';
 import { FlightController } from '../flight/FlightController';
+import { telemetry } from '../flight/telemetry';
 import { useNavigationStore } from '../stores/navigationStore';
 import GalaxyBackground from './GalaxyBackground';
 import Spacecraft from './Spacecraft';
@@ -65,6 +66,7 @@ const SpaceScene: React.FC = () => {
   useFrame((_, delta) => {
     flight.update(delta);
     chaseCamera.update(camera as THREE.PerspectiveCamera, flight, delta);
+    telemetry.progress = flight.transferProgress;
 
     const maneuvering = flight.isManeuvering;
     if (maneuvering !== wasManeuvering.current) {

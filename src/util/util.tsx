@@ -53,8 +53,8 @@ export function renderRichText(
     else if (match[2]) nodes.push(<i key={nodes.length}>{renderRichText(match[2], options)}</i>)
     // --- Underline ---
     else if (match[3]) nodes.push(<u key={nodes.length}>{renderRichText(match[3], options)}</u>)
-    // --- Color ---
-    else if (match[4] && match[5]) nodes.push(<span key={nodes.length} style={{ color: match[4] }}>{renderRichText(match[5], options)}</span>)
+    // --- Color: rendered as emphasis so copy never fights the planet accent ---
+    else if (match[4] && match[5]) nodes.push(<span key={nodes.length} className="rt-em">{renderRichText(match[5], options)}</span>)
     // --- Pulse ---
     else if (match[6]) nodes.push(<span key={nodes.length} className="pulse-text">{renderRichText(match[6], options)}</span>)
     // --- Blink ---

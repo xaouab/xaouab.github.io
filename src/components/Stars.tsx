@@ -1,118 +1,127 @@
 // src/components/Stars.tsx
 import { Html } from '@react-three/drei';
-import { useFrame, useLoader } from '@react-three/fiber';
-import React, { useEffect, useRef, useState } from 'react';
-import { Mesh, TextureLoader } from 'three';
+import { useFrame } from '@react-three/fiber';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { AdditiveBlending, BackSide, Color, Group, Mesh, ShaderMaterial, Vector3 } from 'three';
 import { starsData } from '../data/starsData';
 import type { StarData } from '../data/starsData';
 import { useLanguageStore } from '../stores/languageStore';
 import { useNavigationStore } from '../stores/navigationStore';
+import { useIsMobile } from '../util/useIsMobile';
 
-const Star: React.FC<StarData> = ({ id, position, texture, title, color, metalness, roughness }) => {
-  const meshRef = useRef<Mesh>(null);
+// Fresnel rim: bright at the silhouette, transparent facing the camera.
+const createAtmosphere = (color: string) =>
+  new ShaderMaterial({
+    uniforms: { glowColor: { value: new Color(color) }, intensity: { value: 0.9 } },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vView;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vView = normalize(-mv.xyz);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: `
+      uniform vec3 glowColor;
+      uniform float intensity;
+      varying vec3 vNormal;
+      varying vec3 vView;
+      void main() {
+        float rim = pow(1.0 - abs(dot(vNormal, vView)), 3.0);
+        gl_FragColor = vec4(glowColor, rim * intensity);
+      }`,
+    side: BackSide,
+    blending: AdditiveBlending,
+    transparent: true,
+    depthWrite: false,
+  });
+
+const Star: React.FC<StarData> = ({ id, position, title, color, metalness, roughness }) => {
+  const groupRef = useRef<Group>(null);
+  const atmosphereRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const { currentLanguage } = useLanguageStore();
-  const { setView, isTransitioning, currentView, selectedStarId } = useNavigationStore();
+  const { setView, isTransitioning, currentView } = useNavigationStore();
 
-  const tex = useLoader(TextureLoader, texture);
+  const atmosphere = useMemo(() => createAtmosphere(color), [color]);
+  const targetScale = useMemo(() => new Vector3(), []);
+  useEffect(() => () => atmosphere.dispose(), [atmosphere]);
 
-  const isSelected = currentView === 'star' && selectedStarId === id;
   const isReturningToHome = currentView === 'home' && isTransitioning;
   const showPlanetLabel = currentView !== 'star' && (!isMobile || currentView === 'home' || currentView === 'start');
   // The ship can be redirected mid-flight, so planets stay clickable while travelling.
   const canInteract = currentView !== 'star';
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const media = window.matchMedia('(max-width: 767px)');
-    const update = () => setIsMobile(media.matches);
-    update();
-
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
-
-  useEffect(() => {
-    if (isReturningToHome) {
-      setHovered(false);
-    }
+    if (isReturningToHome) setHovered(false);
   }, [isReturningToHome]);
 
-  useFrame((_) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.001;
-      const scale = hovered && !isSelected ? 1.3 : 1;
-      meshRef.current.scale.lerp({ x: scale, y: scale, z: scale } as any, 0.1);
-    }
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+    const s = hovered && canInteract ? 1.18 : 1;
+    // Frame-rate independent critically-damped approach.
+    groupRef.current.scale.lerp(targetScale.set(s, s, s), 1 - Math.exp(-delta * 10));
+    const glow = (atmosphereRef.current?.material as ShaderMaterial | undefined)?.uniforms.intensity;
+    if (glow) glow.value += ((hovered ? 1.6 : 0.9) - glow.value) * (1 - Math.exp(-delta * 8));
   });
 
-  
-
   const handleClick = () => {
-    if (canInteract) {
-      setView('star', id);
-    }
+    if (canInteract) setView('star', id);
+  };
+
+  const hoverHandlers = {
+    onPointerOver: () => canInteract && setHovered(true),
+    onPointerOut: () => setHovered(false),
   };
 
   return (
     <group position={position}>
-      <mesh
-        ref={meshRef}
-        onClick={handleClick}
-        onPointerOver={() => {
-          if (canInteract) setHovered(true);
-        }}
-        onPointerOut={() => setHovered(false)}
-      >
-        <sphereGeometry args={[0.5, 32, 32]} />
-        <meshStandardMaterial
-            map={tex}
-            emissiveIntensity={hovered && !isSelected ? 0.6 : 0}
+      <group ref={groupRef}>
+        <mesh onClick={handleClick} {...hoverHandlers}>
+          <sphereGeometry args={[0.5, 64, 64]} />
+          <meshPhysicalMaterial
             color={color}
             emissive={color}
+            emissiveIntensity={0.08}
             metalness={metalness ?? 0}
-            roughness={roughness ?? 1}
-            toneMapped={true}
-        />
-      </mesh>
-      
+            roughness={roughness ?? 0.6}
+            clearcoat={0.6}
+            clearcoatRoughness={0.4}
+            sheen={1}
+            sheenColor={color}
+          />
+        </mesh>
+        <mesh ref={atmosphereRef} scale={1.22} material={atmosphere}>
+          <sphereGeometry args={[0.5, 48, 48]} />
+        </mesh>
+      </group>
+
       {showPlanetLabel && (
-        <Html 
-        pointerEvents={canInteract ? 'auto' : 'none'}
-        position={[0, 2, 0]} 
-        >
-          <div onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}
-              onClick={handleClick} style={{
-              background: 'rgba(49, 49, 49, 0.3)',
-              padding: '8px 24px',
-              whiteSpace: 'nowrap',
-              opacity: 1,
-              transition: 'opacity 0.5s ease',
-              cursor: canInteract ? 'pointer' : 'default',
-              pointerEvents: canInteract ? 'auto' : 'none'
-              
-          }}>
-              {title[currentLanguage]}
-          </div>
-      </Html>
+        <Html position={[0, 1.4, 0]} center pointerEvents={canInteract ? 'auto' : 'none'}>
+          <button
+            type="button"
+            className={`planet-label ${hovered ? 'hovered' : ''}`}
+            style={{ '--accent': color } as React.CSSProperties}
+            onClick={handleClick}
+            {...hoverHandlers}
+          >
+            <span className="planet-glyph" aria-hidden />
+            {title[currentLanguage]}
+          </button>
+        </Html>
       )}
     </group>
   );
 };
 
-const Stars: React.FC = () => {
-  return (
-    <>
-      {starsData.map((star) => (
-        <Star
-          key={star.id}
-          {...star}
-        />
-      ))}
-    </>
-  );
-};
+const Stars: React.FC = () => (
+  <>
+    {starsData.map((star) => (
+      <Star key={star.id} {...star} />
+    ))}
+  </>
+);
 
 export default Stars;

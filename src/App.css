@@ -1,44 +1,56 @@
 /* src/App.css */
-@font-face {
-  font-family: allFont; /* set name */
-  font-weight: 900;
-  src: url("/quicking.woff2"); /* url of the font */
-}
-
 :root {
-  --hud-button-bg: rgba(255, 255, 255, 0.1);
-  --hud-button-bg-hover: rgba(255, 255, 255, 0.2);
-  --mobile-hud-clearance: 88px;
-}
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --hud-button-bg: rgba(255, 255, 255, 0.08);
-    --hud-button-bg-hover: rgba(255, 255, 255, 0.15);
-  }
-}
+  --text: rgba(255, 255, 255, 0.96);
+  --text-2: rgba(235, 235, 245, 0.68);
+  --text-3: rgba(235, 235, 245, 0.56);
+  --hairline: rgba(255, 255, 255, 0.1);
+  --fill: rgba(255, 255, 255, 0.08);
+  --fill-hover: rgba(255, 255, 255, 0.14);
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --hud-button-bg: rgba(0, 0, 0, 0.1);
-    --hud-button-bg-hover: rgba(0, 0, 0, 0.2);
-  }
-}
+  --radius-l: 28px;
+  --radius-m: 16px;
+  --radius-s: 10px;
 
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --edge: clamp(16px, 2.5vw, 28px);
+
+  font: 100%/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  color-scheme: dark;
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: allFont;
-  letter-spacing: 1px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  caret-color: currentColor;
   overflow: hidden;
-  background: #000;
-  color: #fff;
+  background: #060609;
+  color: var(--text);
 }
 
 .app {
@@ -53,19 +65,7 @@ canvas {
   height: 100%;
 }
 
-.ui-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.ui-container > * {
-  pointer-events: auto;
-}
-
+/* ---- Loading ---------------------------------------------------------- */
 .loading-container {
   position: absolute;
   inset: 0;
@@ -73,55 +73,48 @@ canvas {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-
-  opacity: 1;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.6s ease, filter 0.6s ease;
 }
 
 .loading-hide {
   opacity: 0;
-}
-
-.loading-content {
-  transform: translateY(0);
-  transition: transform 0.6s ease, opacity 0.6s ease;
-}
-
-.loading-hide .loading-content {
-  transform: translateY(8px);
+  filter: blur(8px);
 }
 
 .loading-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  min-width: 240px;
+  gap: 14px;
+  width: 200px;
 }
 
 .loading-label {
-  font-size: 12px;
-  letter-spacing: 4px;
-  opacity: 0.8;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-2);
 }
 
 .loading-bar {
   width: 100%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.15);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--fill);
   overflow: hidden;
 }
 
 .loading-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #6fc2ff 0%, #a5dcff 45%, #ffffff 100%);
-  transform-origin: left;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.92);
   transition: width 0.3s ease;
 }
 
 .loading-percent {
-  font-size: 11px;
-  opacity: 0.6;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
 }
 
 .canvas-fade {

@@ -25,7 +25,6 @@ export interface StarData {
     fr: string;
   };
   code: string;
-  texture: string;
   color: string;
   metalness?: number;
   roughness?: number;
@@ -40,7 +39,6 @@ export const starsData: StarData[] = [
     position: [0, 23, 8],
     title: { en: 'Who am I?', fr: 'Qui suis-je?' },
     code: 'WHOAMI-001',
-    texture: '/textures/Venusian.webp',
     color: '#ffcf5f',
     content: {
       en: {
@@ -78,7 +76,6 @@ export const starsData: StarData[] = [
     position: [-12, 10, -8],
     title: { en: 'Work Experience', fr: 'Expérience professionnelle' },
     code: 'WORK-002',
-    texture: '/textures/mars.webp',
     color: '#ff6b6b',
     content: {
       en: {
@@ -151,8 +148,7 @@ export const starsData: StarData[] = [
     position: [2, 0, 0],
     title: { en: 'Projects', fr: 'Projets' },
     code: 'PROJ-003',
-    texture: '/textures/jupiter.webp',
-    color: '#fff8f3',
+    color: '#ffb27a',
     metalness: 1,
     content: {
       en: {
@@ -324,8 +320,7 @@ export const starsData: StarData[] = [
     position: [-12, -20, -12],
     title: { en: 'Technical Skills', fr: 'Compétences Techniques' },
     code: 'TECH-004',
-    texture: '/textures/Savannah.webp',
-    color: '#ffffff',
+    color: '#b8a4ff',
     content: {
       en: {
         description: "My practical engineering toolbox, built through internships, freelance missions, and long personal projects. I focus on tools that help me ship reliable systems end-to-end (and yes, I actually use what's listed).",
@@ -394,7 +389,6 @@ export const starsData: StarData[] = [
     position: [8, -35, -12],
     title: { en: 'Get In Touch', fr: 'Contact' },
     code: 'COMM-005',
-    texture: '/textures/Icy.webp',
     color: '#a4f3ff',
     metalness: 1,
     roughness: .4,

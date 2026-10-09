@@ -32,7 +32,6 @@ const rig = (focusWeight: number, distance: number, height: number): Framing => 
 
 const HOME = rig(0.82, 3.4, 0.95);
 const PLANET_ORBIT = rig(0.45, 2.3, 0.55);
-const DEPARTURE = rig(0.3, 2.8, 0.7);
 const TRANSFER_TO_PLANET_START = rig(0.2, 2.8, 0.7);
 const TRANSFER_TO_HOME_START = rig(0.25, 3.0, 0.8);
 
@@ -149,9 +148,6 @@ export class ChaseCamera {
         break;
       case 'planet-orbit':
         this.setTarget(PLANET_ORBIT);
-        break;
-      case 'departure':
-        this.setTarget(DEPARTURE);
         break;
       case 'transfer': {
         // Ease the focus in as the destination gets close.

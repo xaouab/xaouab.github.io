@@ -11,7 +11,7 @@
 // the current state, so the ship can be redirected at any moment.
 import { MathUtils, Matrix4, Quaternion, Vector3 } from 'three';
 
-export type FlightPhase = 'home-orbit' | 'transfer' | 'planet-orbit' | 'departure';
+export type FlightPhase = 'home-orbit' | 'transfer' | 'planet-orbit';
 
 export interface PlanetBody {
   id: string;
@@ -49,14 +49,14 @@ const TO_PLANET: SpeedProfile = { maxSpeed: 46, accel: 24, decel: 20, lateralAcc
 // Relaxed cruise back to the home orbit.
 const TO_HOME: SpeedProfile = { maxSpeed: 20, accel: 3.5, decel: 3.5, lateralAccel: 6 };
 
-// Departure spiral: slowly widen the planet orbit before heading home.
-const DEPART_EXIT_RADIUS = 5;
-const DEPART_RADIUS_TIME = 4; // s to go from orbit radius to exit radius
-const DEPART_SPEED = 3; // tangential speed reached during the spiral
-const DEPART_SPEED_RATE = 0.6;
-const DEPART_MIN_TIME = 2.5;
-const DEPART_MAX_TIME = 7;
-const DEPART_OUTBOUND_DOT = 0.35; // leave once heading points this much away from home center
+// Leaving a planet heads straight for the nearest stretch of the home orbit:
+// joins are searched within this angle of the closest home point first.
+const HOME_NEAR_SPAN = 0.6; // rad either side
+const HOME_NEAR_STEPS = 24;
+// Small preference for the join closest to the ship, so it doesn't drift round the orbit.
+const HOME_DRIFT_COST = 0.5;
+// Any curve scoring above this clipped a planet.
+const CLIP_COST = 1000;
 
 // Visual attitude.
 const BANK_GAIN = 0.09;
@@ -90,8 +90,6 @@ const planetPoint = (center: Vector3, theta: number, radius: number, out: Vector
 const planetTangent = (theta: number, dir: number, out: Vector3) =>
   out.set(-Math.sin(theta) * dir, 0, Math.cos(theta) * dir);
 
-const smootherstep = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
-const smootherstepDeriv = (t: number) => 30 * t * t * (t - 1) * (t - 1);
 
 // Cubic Hermite basis.
 const hermitePoint = (p0: Vector3, m0: Vector3, p1: Vector3, m1: Vector3, u: number, out: Vector3) => {
@@ -272,9 +270,6 @@ export class FlightController {
   private pathJoinTheta = 0;
   private pathJoinDir: 1 | -1 = 1;
 
-  private departElapsed = 0;
-  private departStartRadius = PLANET_ORBIT_RADIUS;
-  private departTangentialSpeed = 0;
 
   private prevVelocity = new Vector3();
   private tmpA = new Vector3();
@@ -296,7 +291,7 @@ export class FlightController {
   }
 
   get isManeuvering() {
-    return this.phase === 'transfer' || this.phase === 'departure';
+    return this.phase === 'transfer';
   }
 
   /** Head for a planet orbit. Safe to call at any time, from any phase. */
@@ -309,22 +304,15 @@ export class FlightController {
     this.planTransfer({ kind: 'planet', planet }, TO_PLANET);
   }
 
-  /** Return to the home orbit. From a planet orbit this first spirals out slowly. */
+  /** Return to the home orbit, joining it at the nearest clear point. */
   goHome() {
     const wasTargetingPlanet = this.targetPlanetId !== null;
     this.targetPlanetId = null;
 
-    if (this.phase === 'planet-orbit') {
-      this.phase = 'departure';
-      this.departElapsed = 0;
-      this.departStartRadius = this.orbitRadius;
-      this.departTangentialSpeed = this.orbitAngularSpeed * this.orbitRadius;
-      return;
-    }
-    if (this.phase === 'transfer' && wasTargetingPlanet) {
+    if (this.phase === 'planet-orbit' || (this.phase === 'transfer' && wasTargetingPlanet)) {
       this.planTransfer({ kind: 'home' }, TO_HOME);
     }
-    // Already in home orbit, heading home, or departing: nothing to do.
+    // Already in home orbit or heading home: nothing to do.
   }
 
   update(rawDt: number) {
@@ -337,9 +325,6 @@ export class FlightController {
       case 'home-orbit':
       case 'planet-orbit':
         this.stepOrbit(dt);
-        break;
-      case 'departure':
-        this.stepDeparture(dt);
         break;
       case 'transfer':
         this.stepTransfer(dt);
@@ -401,40 +386,6 @@ export class FlightController {
     } else {
       planetPoint(this.orbitCenter, theta, this.orbitRadius, this.position);
       planetTangent(theta, this.orbitDir, this.velocity).multiplyScalar(tangentialSpeed);
-    }
-  }
-
-  private stepDeparture(dt: number) {
-    this.departElapsed += dt;
-    const t = MathUtils.clamp(this.departElapsed / DEPART_RADIUS_TIME, 0, 1);
-    const radius = MathUtils.lerp(this.departStartRadius, DEPART_EXIT_RADIUS, smootherstep(t));
-    const radialSpeed =
-      t < 1 ? ((DEPART_EXIT_RADIUS - this.departStartRadius) * smootherstepDeriv(t)) / DEPART_RADIUS_TIME : 0;
-
-    const before = this.departTangentialSpeed;
-    this.departTangentialSpeed = MathUtils.damp(this.departTangentialSpeed, DEPART_SPEED, DEPART_SPEED_RATE, dt);
-    this.thrust = (this.departTangentialSpeed - before) / dt;
-
-    this.orbitTheta += (this.orbitDir * this.departTangentialSpeed * dt) / radius;
-    this.orbitRadius = radius;
-
-    const c = Math.cos(this.orbitTheta);
-    const s = Math.sin(this.orbitTheta);
-    planetPoint(this.orbitCenter, this.orbitTheta, radius, this.position);
-    this.velocity
-      .set(c * radialSpeed, 0, s * radialSpeed)
-      .addScaledVector(planetTangent(this.orbitTheta, this.orbitDir, this.tmpA), this.departTangentialSpeed);
-
-    if (this.departElapsed < DEPART_MIN_TIME) return;
-
-    // Leave once the ship is heading away from the system (towards the home orbit).
-    const out = this.tmpB.subVectors(this.position, HOME_CENTER).setY(0);
-    const heading = this.tmpC.copy(this.velocity).setY(0);
-    const outbound =
-      out.lengthSq() > 1e-8 && heading.lengthSq() > 1e-8 ? out.normalize().dot(heading.normalize()) : 1;
-
-    if (outbound >= DEPART_OUTBOUND_DOT || this.departElapsed >= DEPART_MAX_TIME) {
-      this.planTransfer({ kind: 'home' }, TO_HOME);
     }
   }
 
@@ -524,8 +475,7 @@ export class FlightController {
     let best: JoinCandidate | null = null;
     let bestCost = Infinity;
 
-    for (let i = 0; i < angleSteps; i++) {
-      const theta = (i / angleSteps) * Math.PI * 2;
+    const consider = (theta: number, drift: number) => {
       for (const dir of [1, -1] as const) {
         if (target.kind === 'home') {
           homePoint(theta, p1);
@@ -539,14 +489,26 @@ export class FlightController {
         for (const [k0, k1] of TANGENT_SCALES) {
           m0.copy(startDir).multiplyScalar(Math.max(k0 * chord, minStartTangent));
           m1.copy(t1).multiplyScalar(k1 * chord);
-          const cost = this.evaluate(start, m0, p1, m1, startTurnRadius, brakingDistance);
+          const cost = this.evaluate(start, m0, p1, m1, startTurnRadius, brakingDistance) + drift;
           if (cost < bestCost) {
             bestCost = cost;
             best = { theta, dir, cost, p1: p1.clone(), m0: m0.clone(), m1: m1.clone() };
           }
         }
       }
+    };
+
+    if (target.kind === 'home') {
+      const rel = this.tmpC.subVectors(start, HOME_CENTER);
+      const nearest = Math.atan2(rel.dot(HOME_B), rel.dot(HOME_A));
+      for (let i = 0; i <= HOME_NEAR_STEPS; i++) {
+        const offset = ((i / HOME_NEAR_STEPS) * 2 - 1) * HOME_NEAR_SPAN;
+        consider(nearest + offset, Math.abs(offset) * HOME_RADIUS * HOME_DRIFT_COST);
+      }
+      if (bestCost < CLIP_COST) return best!;
     }
+
+    for (let i = 0; i < angleSteps; i++) consider((i / angleSteps) * Math.PI * 2, 0);
 
     return best!;
   }
@@ -601,7 +563,7 @@ export class FlightController {
         toCenter.subVectors(planet.center, prev);
         const t = segLengthSq > 1e-12 ? MathUtils.clamp(toCenter.dot(seg) / segLengthSq, 0, 1) : 0;
         const d = toCenter.addScaledVector(seg, -t).length();
-        if (d < PLANET_CLEARANCE) penalty += 1000 + (PLANET_CLEARANCE - d) * 1000;
+        if (d < PLANET_CLEARANCE) penalty += CLIP_COST + (PLANET_CLEARANCE - d) * CLIP_COST;
       }
       prev.copy(cur);
     }

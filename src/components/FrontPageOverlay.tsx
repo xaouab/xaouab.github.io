@@ -1,31 +1,25 @@
 // src/components/FrontPageOverlay.tsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { useLanguageStore } from '../stores/languageStore';
-import '../styles/FrontPageOverlay.css';
+import { SPRING } from '../util/motion';
+
+const enter = (delay: number) => ({
+  initial: { opacity: 0, y: 12, filter: 'blur(10px)' },
+  animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  exit: { opacity: 0, y: -8, filter: 'blur(10px)', transition: { duration: 0.25 } },
+  transition: { ...SPRING, duration: 0.7, delay },
+});
 
 const FrontPageOverlay: React.FC = () => {
   const { t } = useLanguageStore();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
-    <>
-      <div className="star-details-container">
-          <div className="star-header">
-              <h2>Aouab Admou</h2>
-              <span className="star-code">xaouab</span>
-            </div>
-      </div>
-    
-      <div className={`front-page-overlay ${visible ? 'visible' : ''}`}>
-        <h1 className="portfolio-title">{t('frontPage.subtitle')}</h1>
-      </div>
-
-    </>
+    <header className="hero">
+      <motion.h1 className="hero-title" {...enter(0.2)}>Aouab Admou</motion.h1>
+      <motion.p className="hero-role" {...enter(0.3)}>{t('frontPage.role')}</motion.p>
+      <motion.p className="hero-hint" {...enter(0.6)}>{t('frontPage.subtitle')}</motion.p>
+    </header>
   );
 };
 

@@ -17,7 +17,7 @@ export default function Loading() {
   return (
     <div className={`loading-container ${!active ? 'loading-hide' : ''}`}>
       <div className="loading-content">
-        <span className="loading-label">LOADING</span>
+        <span className="loading-label">Loading</span>
 
         <div className="loading-bar">
           <div

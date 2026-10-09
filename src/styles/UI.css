@@ -1,0 +1,825 @@
+/* src/styles/UI.css: HUD layer: materials, hero, dock, detail panel/sheet. */
+
+:root {
+  --panel-w: clamp(360px, 34vw, 460px);
+  --ease-out: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.ui-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ui-container :is(button, a, .panel, .dock, .segmented) {
+  pointer-events: auto;
+}
+
+/* ========================================
+   Materials: weight encodes hierarchy.
+   Frosted-glass web approximation, not Apple's official Liquid Glass.
+======================================== */
+.material {
+  background: rgba(30, 30, 36, 0.5);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.material-thick {
+  background: rgba(14, 14, 18, 0.8);
+  -webkit-backdrop-filter: blur(48px) saturate(140%);
+  backdrop-filter: blur(48px) saturate(140%);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.07),
+    0 24px 64px rgba(0, 0, 0, 0.45);
+}
+
+/* Shared press feedback: instant on pointer-down. */
+.icon-button,
+.dock-item,
+.rail-item,
+.pill-link,
+.planet-label,
+.segmented button {
+  transition: transform 120ms ease-out, background-color 200ms ease, color 200ms ease, opacity 200ms ease;
+}
+
+.icon-button:active:not(:disabled),
+.dock-item:active,
+.rail-item:active,
+.pill-link:active,
+.planet-label:active {
+  transform: scale(0.96);
+}
+
+:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.icon-button {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--fill);
+  color: var(--text-2);
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--fill-hover);
+  color: var(--text);
+}
+
+.icon-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ========================================
+   Language segmented control
+======================================== */
+.segmented {
+  position: absolute;
+  top: calc(var(--edge) + var(--safe-top));
+  right: var(--edge);
+  z-index: 40;
+  display: flex;
+  padding: 3px;
+  border-radius: 999px;
+}
+
+.segmented button {
+  position: relative;
+  width: 44px;
+  height: 30px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+}
+
+.segmented button.active {
+  color: var(--text);
+}
+
+.segmented button span {
+  position: relative;
+}
+
+.segmented-thumb {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ========================================
+   Hero
+======================================== */
+.hero {
+  position: absolute;
+  top: calc(var(--edge) + var(--safe-top) + 8px);
+  left: calc(var(--edge) + 8px);
+  max-width: min(640px, calc(100vw - 2 * var(--edge) - 110px));
+  pointer-events: none;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.hero-role {
+  margin-top: 10px;
+  font-size: clamp(1rem, 1.4vw, 1.1875rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--text-2);
+}
+
+.hero-hint {
+  margin-top: 22px;
+  font-size: 0.875rem;
+  letter-spacing: -0.005em;
+  color: var(--text-3);
+}
+
+/* ========================================
+   Planet labels (in-scene)
+======================================== */
+.planet-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  background: rgba(30, 30, 36, 0.45);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.25);
+  user-select: none;
+}
+
+.planet-label.hovered {
+  background: rgba(60, 60, 70, 0.6);
+  transform: scale(1.06);
+}
+
+/* A tiny lit sphere: ties each control to its planet in the scene. */
+.planet-glyph {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 30%,
+    color-mix(in srgb, var(--accent) 35%, #fff) 0%,
+    var(--accent) 45%,
+    color-mix(in srgb, var(--accent) 30%, #000) 100%
+  );
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.18);
+}
+
+/* ========================================
+   Flight readout: trajectory plot during transfers
+======================================== */
+.readout-anchor {
+  position: absolute;
+  z-index: 25;
+  top: calc(var(--edge) + var(--safe-top));
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 450ms var(--ease-out);
+}
+
+.is-star .readout-anchor {
+  transform: translateX(calc((var(--edge) + var(--panel-w)) / 2));
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+}
+
+.readout-text {
+  font-size: 0.8125rem;
+  letter-spacing: -0.003em;
+  color: var(--text-2);
+}
+
+.readout-text strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.readout-plot {
+  position: relative;
+  width: 200px;
+  height: 32px;
+}
+
+.readout-arc {
+  display: block;
+  width: 200px;
+  height: 32px;
+  overflow: visible;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.readout-arc-path {
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1.25;
+  stroke-dasharray: 0.006 0.018;
+}
+
+.readout-arc-flown {
+  stroke: var(--accent);
+  stroke-width: 1.75;
+}
+
+.readout-target {
+  fill: var(--accent);
+}
+
+.readout-ship {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  offset-path: path('M6 26 Q100 -6 194 26');
+  offset-rotate: 0deg;
+}
+
+/* ========================================
+   Dock
+======================================== */
+.is-home .dock-anchor {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.dock-anchor {
+  position: absolute;
+  z-index: 30;
+  bottom: calc(var(--edge) + var(--safe-bottom));
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 450ms var(--ease-out), opacity 250ms ease, visibility 250ms;
+}
+
+/* Beside the panel, center the dock in the remaining space. */
+.dock-anchor.with-panel {
+  transform: translateX(calc((var(--edge) + var(--panel-w)) / 2));
+}
+
+.dock {
+  max-width: calc(100vw - 2 * var(--edge));
+  display: flex;
+  gap: 2px;
+  padding: 5px;
+  border-radius: 999px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dock::-webkit-scrollbar {
+  display: none;
+}
+
+.with-panel .dock {
+  max-width: calc(100vw - 3 * var(--edge) - var(--panel-w));
+}
+
+.dock-item {
+  position: relative;
+  flex: 0 0 auto;
+  height: 40px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  white-space: nowrap;
+  color: var(--text-2);
+}
+
+.dock-item:hover {
+  color: var(--text);
+}
+
+.dock-item.active {
+  color: var(--text);
+}
+
+.dock-item > :not(.dock-active) {
+  position: relative;
+}
+
+.dock-active {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.22);
+}
+
+/* Beside the panel there's less room: collapse to dots, keep the active label. */
+.with-panel .dock-item:not(.active) {
+  padding: 0 14px;
+}
+
+.with-panel .dock-item:not(.active) .dock-label {
+  display: none;
+}
+
+/* ========================================
+   Detail panel (desktop) / sheet (mobile)
+======================================== */
+.panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(var(--edge) + var(--safe-top));
+  left: var(--edge);
+  bottom: calc(var(--edge) + var(--safe-bottom));
+  width: var(--panel-w);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.panel-grab {
+  flex: 0 0 auto;
+  padding: 22px 22px 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.panel-heading {
+  min-width: 0;
+}
+
+.panel-glyph {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+.panel-title {
+  margin-top: 10px;
+  text-wrap: balance;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.026em;
+}
+
+.panel-intro {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  margin: 10px 0 16px;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  letter-spacing: -0.006em;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.panel-intro.open {
+  -webkit-line-clamp: unset;
+}
+
+.panel-intro:hover {
+  color: var(--text);
+}
+
+/* ---- Item rail ---- */
+.rail {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  padding: 2px 22px 14px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 22px;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail-item {
+  position: relative;
+  flex: 0 0 auto;
+  max-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 14px;
+  background: var(--fill);
+  text-align: left;
+  scroll-snap-align: start;
+  color: var(--text-2);
+}
+
+.rail-item:hover {
+  background: var(--fill-hover);
+}
+
+.rail-item.active {
+  color: var(--text);
+  background: transparent;
+}
+
+.rail-item > :not(.rail-active) {
+  position: relative;
+}
+
+.rail-active {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.rail-thumb {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--fill);
+}
+
+.rail-item.no-thumb {
+  padding: 9px 16px;
+}
+
+.rail-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rail-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rail-title,
+.rail-subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rail-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.rail-subtitle {
+  font-size: 0.6875rem;
+  letter-spacing: 0.005em;
+  color: var(--text-3);
+}
+
+/* ---- Stage + card ---- */
+.stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 22px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 14px, #000 calc(100% - 20px), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 14px, #000 calc(100% - 20px), transparent);
+}
+
+.card {
+  will-change: transform, opacity;
+}
+
+.card-hero {
+  margin-bottom: 18px;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--fill);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+.card-hero img {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  object-position: center 30%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.card-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.021em;
+  text-wrap: balance;
+}
+
+.card-subtitle {
+  margin-top: 3px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  color: color-mix(in srgb, var(--accent) 55%, var(--text-2));
+}
+
+.card-body {
+  margin-top: 14px;
+  font-size: 0.9375rem;
+  line-height: 1.62;
+  letter-spacing: -0.004em;
+  color: rgba(255, 255, 255, 0.84);
+  text-wrap: pretty;
+}
+
+.card-body a {
+  color: color-mix(in srgb, var(--accent) 70%, #fff);
+  text-underline-offset: 3px;
+}
+
+.card-body b {
+  font-weight: 650;
+  color: var(--text);
+}
+
+.card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--accent) 65%, #fff);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.pill-link:hover {
+  background: color-mix(in srgb, var(--accent) 26%, transparent);
+}
+
+/* ---- Pager ---- */
+.pager {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px 16px;
+}
+
+.pager-next {
+  min-width: 0;
+  max-width: 78%;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px 0 16px;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--text);
+  transition: transform 120ms ease-out, background-color 200ms ease;
+}
+
+.pager-next:hover {
+  background: var(--fill-hover);
+}
+
+.pager-next:active {
+  transform: scale(0.97);
+}
+
+.pager-next-label {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-3);
+}
+
+.pager-next-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.pager-next svg {
+  flex: 0 0 auto;
+  color: var(--text-2);
+}
+
+/* ========================================
+   Mobile
+======================================== */
+@media (max-width: 767px) {
+  .hero {
+    left: var(--edge);
+    top: calc(var(--edge) + var(--safe-top) + 4px);
+  }
+
+  .hero-hint {
+    margin-top: 14px;
+  }
+
+  .is-star .dock-anchor {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .dock-item {
+    height: 38px;
+    padding: 0 13px;
+    font-size: 0.8125rem;
+  }
+
+  .panel.is-sheet {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: calc(100dvh - var(--safe-top) - 64px);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    padding-bottom: var(--safe-bottom);
+  }
+
+  .is-sheet .panel-grab {
+    padding: 0 18px;
+    touch-action: none;
+  }
+
+  .sheet-handle {
+    display: block;
+    width: 36px;
+    height: 5px;
+    margin: 8px auto 12px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  .readout-anchor {
+    top: auto;
+    bottom: calc(var(--edge) + var(--safe-bottom));
+  }
+
+  .is-star .readout-anchor {
+    transform: none;
+    opacity: 0;
+  }
+
+  .is-sheet .panel-title {
+    font-size: 1.5rem;
+  }
+
+  .is-sheet .panel-intro {
+    -webkit-line-clamp: 2;
+    font-size: 0.875rem;
+    margin: 8px 0 14px;
+  }
+
+  .is-sheet .rail {
+    padding: 2px 18px 12px;
+    scroll-padding-inline: 18px;
+  }
+
+  .is-sheet .stage {
+    padding: 8px 18px 24px;
+  }
+
+  .card-hero img {
+    max-height: 210px;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* ========================================
+   Accessibility
+======================================== */
+@media (prefers-reduced-transparency: reduce) {
+  .material,
+  .material-thick,
+  .planet-label {
+    background: rgb(28, 28, 32);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .material,
+  .material-thick,
+  .planet-label {
+    background: rgb(12, 12, 14);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  :root {
+    --text-2: rgba(255, 255, 255, 0.85);
+    --text-3: rgba(255, 255, 255, 0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-anchor {
+    transition: opacity 200ms ease;
+  }
+
+  .icon-button:active:not(:disabled),
+  .dock-item:active,
+  .rail-item:active,
+  .pill-link:active,
+  .planet-label:active,
+  .planet-label.hovered,
+  .pager-next:active {
+    transform: none;
+  }
+}
