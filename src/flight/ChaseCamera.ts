@@ -11,6 +11,7 @@
 // swing through turns but can never lose the ship.
 import { MathUtils, PerspectiveCamera, Quaternion, Vector3 } from 'three';
 import type { FlightController } from './FlightController';
+import { look } from './look';
 
 // The ship is tiny next to the planets; the whole rig is sized to the ship so
 // it still reads at the same size on screen.
@@ -84,6 +85,10 @@ export class ChaseCamera {
   private identity = new Quaternion();
   private lookTarget = new Vector3();
   private narrowness = 0;
+  private lookQ = new Quaternion();
+  private lookRight = new Vector3();
+  private shownOffset = new Vector3();
+  private shownView = new Vector3();
 
   update(camera: PerspectiveCamera, flight: FlightController, rawDt: number) {
     const dt = MathUtils.clamp(Number.isFinite(rawDt) ? rawDt : 0, 0, 1 / 20);
@@ -129,9 +134,23 @@ export class ChaseCamera {
 
     this.roll = MathUtils.damp(this.roll, flight.bank * CAMERA_ROLL, ROLL_RATE, dt);
 
-    camera.position.copy(flight.position).add(this.offset);
+    // Free-look orbits the shot around the ship without touching the damped rig.
+    this.shownOffset.copy(this.offset).multiplyScalar(look.zoom);
+    this.shownView.copy(this.view);
+    if (look.yaw !== 0 || look.pitch !== 0) {
+      this.lookQ.setFromAxisAngle(UP, look.yaw);
+      this.shownOffset.applyQuaternion(this.lookQ);
+      this.shownView.applyQuaternion(this.lookQ);
+      this.lookRight.crossVectors(this.shownView, UP).normalize();
+      this.lookQ.setFromAxisAngle(this.lookRight, -look.pitch);
+      this.shownOffset.applyQuaternion(this.lookQ);
+      this.shownView.applyQuaternion(this.lookQ).normalize();
+      this.clampPitch(this.shownView);
+    }
+
+    camera.position.copy(flight.position).add(this.shownOffset);
     camera.up.copy(UP);
-    camera.lookAt(this.lookTarget.copy(camera.position).add(this.view));
+    camera.lookAt(this.lookTarget.copy(camera.position).add(this.shownView));
     // The camera looks down its local -Z, so this leans the horizon with the ship's bank.
     camera.rotateZ(-this.roll);
 

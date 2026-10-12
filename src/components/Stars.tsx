@@ -8,6 +8,7 @@ import type { StarData } from '../data/starsData';
 import { useLanguageStore } from '../stores/languageStore';
 import { useNavigationStore } from '../stores/navigationStore';
 import { useIsMobile } from '../util/useIsMobile';
+import { wasJustDragged } from '../flight/look';
 
 // Fresnel rim: bright at the silhouette, transparent facing the camera.
 const createAtmosphere = (color: string) =>
@@ -68,13 +69,24 @@ const Star: React.FC<StarData> = ({ id, position, title, color, metalness, rough
   });
 
   const handleClick = () => {
-    if (canInteract) setView('star', id);
+    // A drag that ends over a planet is a look gesture, not a selection.
+    if (canInteract && !wasJustDragged()) setView('star', id);
   };
 
   const hoverHandlers = {
     onPointerOver: () => canInteract && setHovered(true),
     onPointerOut: () => setHovered(false),
   };
+
+  useEffect(() => {
+    if (!hovered) return;
+    const canvas = document.querySelector('canvas');
+    const previous = canvas?.style.cursor;
+    if (canvas) canvas.style.cursor = 'pointer';
+    return () => {
+      if (canvas && canvas.style.cursor === 'pointer') canvas.style.cursor = previous ?? '';
+    };
+  }, [hovered]);
 
   return (
     <group position={position}>

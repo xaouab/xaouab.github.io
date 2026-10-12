@@ -8,6 +8,7 @@ import { starsData } from '../data/starsData';
 import { ChaseCamera } from '../flight/ChaseCamera';
 import { FlightController } from '../flight/FlightController';
 import { telemetry } from '../flight/telemetry';
+import LookControls from '../flight/LookControls';
 import { useNavigationStore } from '../stores/navigationStore';
 import GalaxyBackground from './GalaxyBackground';
 import Spacecraft from './Spacecraft';
@@ -90,6 +91,7 @@ const SpaceScene: React.FC = () => {
       <Stars />
       <Spacecraft flight={flight} />
       <WarpEffects />
+      <LookControls />
     </>
   );
 };
