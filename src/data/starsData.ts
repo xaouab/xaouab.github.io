@@ -1,5 +1,8 @@
 ﻿// src/data/starsData.ts
 
+import type { PlanetFeature } from '../scene/PlanetFeatures';
+import type { PlanetStyle } from '../scene/planetSurfaces';
+
 type lang = 'fr' | 'en';
 
 interface ContentData {
@@ -26,8 +29,10 @@ export interface StarData {
   };
   code: string;
   color: string;
-  metalness?: number;
-  roughness?: number;
+  /** Painted surface of the planet. */
+  surface: PlanetStyle;
+  /** Rings, moons and other decorations. */
+  features: PlanetFeature[];
   content: {
     [P in lang]: ContentData;
   };
@@ -40,18 +45,26 @@ export const starsData: StarData[] = [
     title: { en: 'Who am I?', fr: 'Qui suis-je?' },
     code: 'WHOAMI-001',
     color: '#ffcf5f',
+    surface: 'dunes',
+    features: [{ kind: 'clouds' }],
     content: {
       en: {
         description: "[pulse]Hello and welcome to my orbit.[/pulse] This section is a quick personal briefing before you visit the rest of the system (yes, I still build weird things just because they sound fun).",
         items: [
           {
             title: 'Aouab Admou',
-            subtitle: 'Computer Science Student',
-            description: "[img=/img/me.webp]\nHello, I am Aouab (pronounced ah-web, yes, like the web). I am a Computer Science student who enjoys building systems that are both technical and playful.\n\nI started learning by myself in middle school: first programming, then design, then music. That mix shaped how I approach software today. I care about engineering quality, but I also care about user feeling, visual clarity, and personality in products.\n\nMost of my work sits at the intersection of backend, real-time systems, and interactive frontends. I enjoy problems where architecture matters: APIs, multiplayer networking, telemetry pipelines, and 3D visualization.\n\nOutside coding, I am a big fan of astronomy and aviation, that's probably why this website looks like this :) it is both my style and a reflection of the kind of systems thinking I enjoy.\n\nIf this is your first visit, feel free to explore each planet. Every one of them contains real projects, work missions, and technical details.",
+            subtitle: 'Space Systems & Cybersecurity Engineer at JAOPS',
+            description: "[img=/img/me.webp]\nHello, I am Aouab (pronounced ah-web, yes, like the web). I am a software engineer and computer science student specializing in cybersecurity, currently working on space mission control systems at JAOPS. I enjoy building systems that are both technical and playful.\n\nI started learning by myself in middle school: first programming, then design, then music. Beyond engineering I still have a strong creative side: music production, audio engineering, design, storytelling and songwriting. That mix shaped how I approach software today. I care about engineering quality, but I also care about user feeling, visual clarity, and personality in products.\n\nMost of my work sits at the intersection of space systems, security, real-time backends and interactive frontends. I enjoy problems where architecture matters: mission control software, secure infrastructure, telemetry pipelines, multiplayer networking and 3D visualization.\n\nOutside coding, I am a big fan of astronomy and aviation, that's probably why this website looks like this :) it is both my style and a reflection of the kind of systems thinking I enjoy.\n\nIf this is your first visit, feel free to explore each planet. Every one of them contains real projects, work missions, and technical details.",
             links: [
               { text: 'Download English Resume', link: '/resume/Aouab Admou - English Resume.pdf' },
               { text: 'Download French Resume', link: '/resume/Aouab Admou - CV FR.pdf' },
             ],
+          },
+          {
+            title: 'Education',
+            subtitle: 'INSA Toulouse, 5th year · TLS-SEC & Paul Sabatier',
+            description: "I am a fifth-year engineering student at [b]INSA Toulouse[/b] (2022 - 2027), in the Computer Engineering & Networks department.\n\nFor this final year I joined the [b]TLS-SEC[/b] cybersecurity specialty, a program shared between three Toulouse engineering schools ([b]INSA Toulouse[/b], [b]Toulouse INP-ENSEEIHT[/b] and [b]ENAC[/b]), which leads to an engineer's degree specialized in cybersecurity (2026 - 2027).\n\nIn parallel, I am completing a [b]double degree[/b]: a Master's in Cybersecurity & Networks at [b]Université Paul Sabatier Toulouse III[/b] (2026 - 2027).\n\nBefore INSA:\n- [b]ISIS Engineering School[/b], Computer Science and Health Systems (2021 - 2022)\n- [b]Elaraki International School[/b], High School Diploma, Mathematics & Engineering option (2014 - 2021)",
+            links: [],
           },
         ],
       },
@@ -60,12 +73,18 @@ export const starsData: StarData[] = [
         items: [
           {
             title: 'Aouab Admou',
-            subtitle: 'Étudiant en informatique',
-            description: "[img=/img/me.webp]\nSalut, moi c'est Aouab (prononce ah-web, comme le web). Je suis etudiant en informatique et j'aime construire des projets techniques avec une vraie identite visuelle.\n\nJ'ai commence en autodidacte au college: code, dessin, musique. Ce melange influence encore ma facon de travailler. Je cherche toujours un bon equilibre entre architecture solide, performance, et experience utilisateur.\n\nJe travaille surtout sur des sujets backend, temps reel et interfaces interactives: APIs, reseau multijoueur, telemetry, visualisation 3D et outils web.\n\nJe suis aussi passionne d'astronomie et d'aviation, d'ou le theme spatial de ce portfolio. Ce n'est pas juste decoratif: c'est aussi ma maniere de raconter mon parcours.\n\nSi c'est ta premiere visite, explore les planetes: chacune contient des missions concretes, des projets livrables et des details techniques.",
+            subtitle: 'Ingénieur systèmes spatiaux & cybersécurité chez JAOPS',
+            description: "[img=/img/me.webp]\nSalut, moi c'est Aouab (prononce ah-web, comme le web). Je suis ingenieur logiciel et etudiant en informatique specialise en cybersecurite, et je travaille actuellement sur des systemes de controle de missions spatiales chez JAOPS. J'aime construire des projets techniques avec une vraie identite visuelle.\n\nJ'ai commence en autodidacte au college: code, dessin, musique. J'ai toujours un vrai cote creatif: production musicale, ingenierie du son, design, storytelling et ecriture de chansons. Ce melange influence encore ma facon de travailler. Je cherche toujours un bon equilibre entre architecture solide, performance, et experience utilisateur.\n\nJe travaille surtout sur des systemes spatiaux, la securite, le backend temps reel et les interfaces interactives: logiciels de controle mission, infrastructures securisees, telemetrie, reseau multijoueur et visualisation 3D.\n\nJe suis aussi passionne d'astronomie et d'aviation, d'ou le theme spatial de ce portfolio. Ce n'est pas juste decoratif: c'est aussi ma maniere de raconter mon parcours.\n\nSi c'est ta premiere visite, explore les planetes: chacune contient des missions concretes, des projets livrables et des details techniques.",
             links: [
               { text: 'Télécharger mon CV en Francais', link: '/resume/Aouab Admou - CV FR.pdf' },
               { text: 'Télécharger mon CV en Anglais', link: '/resume/Aouab Admou - English Resume.pdf' }
             ],
+          },
+          {
+            title: 'Formation',
+            subtitle: 'INSA Toulouse, 5e année · TLS-SEC & Paul Sabatier',
+            description: "Je suis en cinquieme annee d'ecole d'ingenieur a l'[b]INSA Toulouse[/b] (2022 - 2027), dans le departement Informatique & Reseaux.\n\nPour cette derniere annee, j'ai integre la specialite cybersecurite [b]TLS-SEC[/b], une formation partagee entre trois ecoles d'ingenieurs toulousaines ([b]INSA Toulouse[/b], [b]Toulouse INP-ENSEEIHT[/b] et [b]ENAC[/b]), qui mene a un diplome d'ingenieur specialise en cybersecurite (2026 - 2027).\n\nEn parallele, je suis en [b]double diplome[/b] avec le master Cybersecurite & Reseaux de l'[b]Université Paul Sabatier Toulouse III[/b] (2026 - 2027).\n\nAvant l'INSA:\n- [b]École d'ingénieurs ISIS[/b], Informatique et systemes de sante (2021 - 2022)\n- [b]Elaraki International School[/b], baccalaureat, option Mathematiques & Sciences de l'ingenieur (2014 - 2021)",
+            links: [],
           },
         ],
       },
@@ -77,66 +96,111 @@ export const starsData: StarData[] = [
     title: { en: 'Work Experience', fr: 'Expérience professionnelle' },
     code: 'WORK-002',
     color: '#ff6b6b',
+    surface: 'cratered',
+    features: [
+      {
+        kind: 'moons',
+        moons: [
+          { radius: 1.75, size: 0.11, speed: 0.35, tilt: 0.5, phase: 0 },
+          { radius: 2.3, size: 0.07, speed: -0.22, tilt: -0.35, phase: 2.4 },
+        ],
+      },
+    ],
     content: {
       en: {
-        description: "From [color=lightgreen]Tokyo[/color] to [color=lightgreen]Brussels[/color] to [color=lightgreen]remote freelance teams[/color], I shipped production code across different domains: telemetry, web platforms, games, and backend infrastructure (while trying not to anger production at 3 AM).",
+        description: "From [b]Tokyo[/b] to [b]Brussels[/b] to [b]Toulouse[/b], I have shipped mission control software, secured ground infrastructure and built products across web, games and data (while trying not to anger production at 3 AM).",
         items: [
           {
-            title: 'Freelance Software Engineer',
-            subtitle: 'Part-time, Online',
-            description: "[orangepoint][color=orange] MISSION IN PROGRESS[/color]\n\nSince January 2023, I have been collaborating part-time with multiple freelance clients on software and web missions with short iteration cycles and changing requirements.\n\nTypical responsibilities include:\n[color=lightblue]- Backend architecture and API design for feature-heavy products[/color]\n[color=lightblue]- Database modeling, query optimization, and data flow design[/color]\n[color=lightblue]- Integration support between game clients, services, and admin tools[/color]\n[color=lightblue]- Delivery hardening: error handling, logging, and maintainability[/color]\n\nOn one confidential multiplayer mission, I designed and implemented a compact custom data interchange format inspired by Relaxed JSON, then built associated parser/crawler tooling to support interoperability across services and game logic.\n\nI also contribute to deployment and scaling discussions so teams can keep shipping without architectural debt exploding over time.",
-            images: [""],
+            title: 'Space Systems & Cybersecurity Engineer',
+            subtitle: 'JAOPS, Tokyo · Sep 2026 - Present',
+            description: "[orangepoint][b] MISSION IN PROGRESS[/b]\n\nI work on the development and security of mission-critical software for space mission control systems.\n\n- Developing and improving Yamcs and the Grafana-Yamcs integration, with a focus on performance, reliability, observability and mission-specific capabilities\n- DevOps and DevSecOps deployment of JAOPS software across cloud, mission control center and customer on-premise environments\n- Strengthening software and infrastructure security: security audits, attack-surface reduction, authentication, user management, access control and secure data flows\n- Securing Mission Control Center infrastructure and ground-space communications, including emerging standards such as CySAT encryption\n- Developing and open-sourcing a Robot OS 2 interface for Yamcs Gateway: architecture, Rust/ROS 2 bindings, testing, CI, deployment and validation with partners\n- Contributing to project management and company-level technical decisions, with direct feedback to the CEO and CMO on direction, technology choices and priorities",
             links: [],
           },
           {
-            title: 'Fullstack Space Mission Control Software Engineer',
-            subtitle: 'JAOPS, Tokyo, Japan',
-            description: "[greenpoint][color=lightgreen] MISSION COMPLETE[/color]\n\nAt JAOPS, I worked on mission-control software for space telemetry and telecommand operations, with a focus on reliability, operator usability, and real-time data visibility.\n\nMain contributions:\n[color=lightblue]- Built and extended a Grafana 11 plugin for telemetry and command workflows[/color]\n[color=lightblue]- Implemented command panels and operational UI blocks for mission operators[/color]\n[color=lightblue]- Improved real-time visualization to reduce interpretation friction during operations[/color]\n[color=lightblue]- Supported practical operator workflows: acknowledgement paths, quick checks, and clear status feedback[/color]\n\n[color=#2774d9][pulse]HIGHLIGHT[/pulse][/color] [color=lightblue]This role built directly on the work I had done at Space Apps in Brussels. The continuity between both missions let me move faster and deliver production-ready tooling quickly.[/color]\n\n[img=/img/jaops-grafana.webp]",
+            title: 'Space Systems Software Engineer',
+            subtitle: 'JAOPS, Tokyo · Jun 2026 - Sep 2026',
+            description: "[greenpoint][b] MISSION COMPLETE[/b]\n\n- Design, development and testing of new features for space mission software such as Yamcs and its Grafana integration\n- Built and iterated on the DevSecOps infrastructure, CI/CD pipelines and performance benchmarking\n- Analysed software vulnerabilities, reduced the attack surface and implemented secure protocols and algorithms\n- Deployed software in customer environments and supported them through adoption",
+            links: [],
+          },
+          {
+            title: 'Fullstack Software Engineer, Mission Control',
+            subtitle: 'JAOPS, Tokyo · Dec 2024 - Jun 2026',
+            description: "[greenpoint][b] MISSION COMPLETE[/b]\n\nAs part of my initial contract with JAOPS, I led the development of an open-source Grafana 13 app plugin integrating the modern mission control software Yamcs.\n\n- Fast and reliable telemetry updates\n- A robust commanding panel and a telemetry image panel\n- A set of mission control tools for operators\n\nThe plugin was tested at the Space Robotics Lab in Sendai, Japan, on real operator use cases. It also built directly on my work at Space Apps in Brussels, which let me move fast from day one.\n\n[img=/img/jaops-grafana.webp]",
             links: [
-                { text: 'View Project GitHub Repo', link: 'https://github.com/jaops-space/grafana-yamcs-jaops' },
+              { text: 'View Project GitHub Repo', link: 'https://github.com/jaops-space/grafana-yamcs-jaops' },
             ],
           },
           {
-            title: 'Fullstack Software Intern',
-            subtitle: 'Space Apps, Brussels, Belgium',
-            description: "[greenpoint][color=lightgreen] MISSION COMPLETE[/color]\n\nAt Space Apps, I developed mission software components around Yamcs + Grafana for satellite telemetry and command operations.\n\nKey work delivered:\n[color=lightblue]- Grafana 11 plugin integration with Yamcs telemetry/command streams[/color]\n[color=lightblue]- Operational data views tailored to real mission needs[/color]\n[color=lightblue]- Real-time 3D spacecraft visualization in Three.js for stronger spatial understanding[/color]\n[color=lightblue]- Practical UX improvements to help operators interpret state faster[/color]\n\nThe 3D component was introduced to complement charts and raw coordinate feeds with an immediate visual context that teams could use during monitoring and analysis.\n\n[img=/img/spaceapps.webp]",
+            title: 'Fullstack Space Software Intern',
+            subtitle: 'Space Applications Services, Brussels · Jul 2024 - Oct 2024',
+            description: "[greenpoint][b] MISSION COMPLETE[/b]\n\nI contributed to Yamcs core mission control software and observability, across mission operations tooling, telemetry visualization and ground-segment software.\n\n- Developed a Grafana 11 integration for Yamcs, with a custom data source and a real-time 3D spacecraft and Earth visualization\n- Enhanced mission control interfaces and upgraded the Yamcs spacecraft simulator for new operational use cases\n- Contributed to cloud/SaaS infrastructure, containerization and deployment workflows\n- Deployed and validated mission software at the ICE Cubes Mission Control Centre, turning operator feedback into improvements and documentation\n\nTechnologies: Yamcs, Grafana, React, Three.js, Go, Docker, Cloud/SaaS.\n\n[img=/img/spaceapps.webp]",
+            links: [],
+          },
+          {
+            title: 'Part-time Freelance Software Engineer',
+            subtitle: 'Self-employed · Jan 2023 - Dec 2025',
+            description: "[greenpoint][b] MISSION COMPLETE[/b]\n\nThree years of part-time missions for multiple clients, with short iteration cycles and changing requirements:\n\n- Web development with React and native HTML/JS/CSS\n- Desktop apps with Electron, and API bots for Discord and Twitter in TypeScript\n- Back ends with Node Express and Java Spring on MongoDB/PostgreSQL\n- TCP/UDP/WebSocket servers in Java and Node\n- DLL extensions in C++ and C#\n- Game development with GameMaker and Unity\n\nOn one confidential multiplayer mission, I designed a compact data interchange format inspired by Relaxed JSON, with the parser and crawler tooling to make services and game logic interoperate.",
+            links: [],
+          },
+          {
+            title: 'AI Pricing Intelligence & Data Engineering Intern',
+            subtitle: 'PAARLY, Toulouse · Jun 2023 - Jul 2023',
+            description: "[greenpoint][b] MISSION COMPLETE[/b]\n\n- Built web scraping and data extraction pipelines to collect, structure and process large-scale competitive pricing data\n- Developed and integrated AI/ML pricing intelligence tools for product matching, market analysis and price monitoring\n- Data processing, automation and backend development supporting competitive intelligence and dynamic pricing",
             links: [],
           },
           {
             title: 'Production Assistant',
-            subtitle: 'ADVEEZ, Toulouse, France',
-            description: "[purplepoint][color=violet] INITIAL MISSION (COMPLETE)[/color]\n\nThis was my first professional internship and it gave me a complete view of industrial product delivery beyond pure coding.\n\nI discovered how an electronics company serving major airports coordinates:\n[color=lightblue]- Inventory and component traceability[/color]\n[color=lightblue]- Production and assembly workflows[/color]\n[color=lightblue]- Shipping and deployment logistics[/color]\n[color=lightblue]- Device preparation, configuration, and embedded/software touchpoints[/color]\n\nThat mission gave me early discipline around process quality, execution consistency, and cross-team communication.",
+            subtitle: 'ADVEEZ, Toulouse · Jan 2022 - Feb 2022',
+            description: "[purplepoint][b] INITIAL MISSION (COMPLETE)[/b]\n\nMy first professional experience, assisting in the production of electronic solutions as well as management and logistics. It gave me a complete view of industrial product delivery beyond pure coding.\n\nI discovered how an electronics company serving major airports coordinates:\n- Inventory and component traceability\n- Production and assembly workflows\n- Shipping and deployment logistics\n- Device preparation, configuration and software touchpoints",
             links: [],
           },
         ],
       },
       fr: {
-        description: "De [color=lightgreen]Tokyo[/color] a [color=lightgreen]Bruxelles[/color] puis en [color=lightgreen]freelance remote[/color], j'ai livre du code en production sur des sujets varies: telemetry spatiale, plateformes web, jeux et backend (avec le moins possible de surprises a 3h du matin).",
+        description: "De [b]Tokyo[/b] a [b]Bruxelles[/b] en passant par [b]Toulouse[/b], j'ai livre des logiciels de controle mission, securise des infrastructures sol et construit des produits web, jeux et data (avec le moins possible de surprises a 3h du matin).",
         items: [
           {
-            title: 'Freelance Software Engineer',
-            subtitle: 'À temps partiel, en ligne',
-            description: "[orangepoint][color=orange] MISSION EN COURS[/color]\n\nDepuis janvier 2023, je collabore a temps partiel avec plusieurs clients freelance sur des missions software et web avec cycles de livraison courts et besoins qui evoluent vite.\n\nMissions recurrentes:\n[color=lightblue]- Conception backend et architecture d'API[/color]\n[color=lightblue]- Modelisation de base de donnees et organisation des flux de donnees[/color]\n[color=lightblue]- Integration entre clients de jeu, services backend et outils internes[/color]\n[color=lightblue]- Renforcement de la qualite de livraison: gestion d'erreurs, logs, maintenabilite[/color]\n\nSur un projet multijoueur confidentiel, j'ai concu un format d'echange compact inspire de Relaxed JSON, puis les outils parser/crawler associes pour faciliter l'interoperabilite entre composants.\n\nJe participe aussi aux choix de deploiement et de scalabilite pour garder une base technique propre a mesure que le produit grandit.",
+            title: 'Ingénieur systèmes spatiaux & cybersécurité',
+            subtitle: 'JAOPS, Tokyo · sept. 2026 - aujourd’hui',
+            description: "[orangepoint][b] MISSION EN COURS[/b]\n\nJe travaille sur le developpement et la securite de logiciels critiques pour les systemes de controle de missions spatiales.\n\n- Developpement et amelioration de Yamcs et de l'integration Grafana-Yamcs: performance, fiabilite, observabilite et fonctionnalites specifiques aux missions\n- Deploiement DevOps et DevSecOps des logiciels JAOPS en cloud, en centre de controle mission et chez les clients (on-premise)\n- Renforcement de la securite logicielle et infrastructure: audits, reduction de la surface d'attaque, authentification, gestion des utilisateurs, controle d'acces et flux de donnees securises\n- Securite de l'infrastructure du Mission Control Center et des communications sol-espace, dont des standards emergents comme le chiffrement CySAT\n- Developpement et publication open source d'une interface Robot OS 2 pour Yamcs Gateway: architecture, bindings Rust/ROS 2, tests, CI, deploiement et validation avec les partenaires\n- Participation a la gestion de projet et aux decisions techniques de l'entreprise, avec des retours directs au CEO et au CMO sur la direction, les choix technologiques et les priorites",
             links: [],
           },
           {
-            title: 'Fullstack Space Mission Control Software Engineer',
-            subtitle: 'JAOPS, Tokyo, Japon',
-            description: "[greenpoint][color=lightgreen] MISSION TERMINEE[/color]\n\nChez JAOPS, j'ai travaille sur des outils de controle mission pour la telemetry et les telecommandes spatiales, avec un focus sur la fiabilite et l'efficacite operateur.\n\nContributions principales:\n[color=lightblue]- Developpement et evolution d'un plugin Grafana 11 pour telemetry/commandes[/color]\n[color=lightblue]- Mise en place de panneaux de commande et blocs UI operationnels[/color]\n[color=lightblue]- Amelioration des visualisations temps reel pour la prise de decision[/color]\n[color=lightblue]- Optimisation des flux operateur: acquittements, verifications, lisibilite d'etat[/color]\n\n[color=#2774d9][pulse]HIGHLIGHT[/pulse][/color] [color=lightblue]Cette mission prolongeait directement mon travail chez Space Apps, ce qui m'a permis de livrer rapidement des fonctionnalites robustes et exploitables en contexte mission.[/color]\n\n[img=/img/jaops-grafana.webp]",
+            title: 'Ingénieur logiciel systèmes spatiaux',
+            subtitle: 'JAOPS, Tokyo · juin 2026 - sept. 2026',
+            description: "[greenpoint][b] MISSION TERMINEE[/b]\n\n- Conception, developpement et tests de nouvelles fonctionnalites pour les logiciels de mission spatiale comme Yamcs et son integration Grafana\n- Mise en place et amelioration continue de l'infrastructure DevSecOps, des pipelines CI/CD et des benchmarks de performance\n- Analyse des vulnerabilites, reduction de la surface d'attaque et mise en oeuvre de protocoles et algorithmes securises\n- Deploiement chez les clients et accompagnement jusqu'a l'adoption",
+            links: [],
+          },
+          {
+            title: 'Ingénieur logiciel fullstack, contrôle mission',
+            subtitle: 'JAOPS, Tokyo · déc. 2024 - juin 2026',
+            description: "[greenpoint][b] MISSION TERMINEE[/b]\n\nDans le cadre de mon premier contrat chez JAOPS, j'ai dirige le developpement d'un plugin open source Grafana 13 integrant le logiciel de controle mission Yamcs.\n\n- Mises a jour de telemetrie rapides et fiables\n- Un panneau de commande robuste et un panneau d'images de telemetrie\n- Plusieurs outils de controle mission pour les operateurs\n\nLe plugin a ete teste au Space Robotics Lab de Sendai, au Japon, sur des cas d'usage operateurs reels. Il prolongeait directement mon travail chez Space Apps a Bruxelles.\n\n[img=/img/jaops-grafana.webp]",
             links: [
               { text: 'Voir le repo GitHub du projet', link: 'https://github.com/jaops-space/grafana-yamcs-jaops' },
             ],
           },
           {
-            title: 'Stagiaire fullstack',
-            subtitle: 'Space Apps, Bruxelles, Belgique',
-            description: "[greenpoint][color=lightgreen] MISSION TERMINEE[/color]\n\nChez Space Apps, j'ai developpe des briques logicielles pour l'exploitation mission autour de Yamcs et Grafana.\n\nLivrables cles:\n[color=lightblue]- Integration d'un plugin Grafana 11 avec les flux telemetry et telecommande[/color]\n[color=lightblue]- Ecrans operationnels orientes usage salle de controle[/color]\n[color=lightblue]- Visualisation 3D temps reel du vaisseau en Three.js[/color]\n[color=lightblue]- Ajustements UX pour accelerer l'interpretation des etats mission[/color]\n\nLa visualisation 3D a apporte un contexte spatial immediat en complement des courbes et valeurs numeriques.\n\n[img=/img/spaceapps.webp]",
+            title: 'Stagiaire logiciel spatial fullstack',
+            subtitle: 'Space Applications Services, Bruxelles · juil. 2024 - oct. 2024',
+            description: "[greenpoint][b] MISSION TERMINEE[/b]\n\nJ'ai contribue au coeur de Yamcs et a son observabilite: outils d'operations mission, visualisation de telemetrie et logiciels segment sol.\n\n- Developpement d'une integration Grafana 11 pour Yamcs, avec une source de donnees dediee et une visualisation 3D temps reel du vaisseau et de la Terre\n- Amelioration des interfaces de controle mission et du simulateur de vaisseau Yamcs pour de nouveaux cas operationnels\n- Contribution a l'infrastructure cloud/SaaS, a la conteneurisation et aux workflows de deploiement\n- Deploiement et validation au ICE Cubes Mission Control Centre, en transformant les retours operateurs en ameliorations et documentation\n\nTechnologies: Yamcs, Grafana, React, Three.js, Go, Docker, Cloud/SaaS.\n\n[img=/img/spaceapps.webp]",
             links: [],
           },
           {
-            title: 'Assitant en Production',
-            subtitle: 'ADVEEZ, Toulouse, France',
-            description: "[purplepoint][color=violet] PREMIERE MISSION (TERMINEE)[/color]\n\nMon premier stage m'a donne une vision complete de la chaine industrielle, au-dela du simple dev.\n\nJ'y ai observe concretement:\n[color=lightblue]- La gestion de stock et la tracabilite des composants[/color]\n[color=lightblue]- Les etapes de production et d'assemblage[/color]\n[color=lightblue]- Les flux logistiques de preparation et d'expedition[/color]\n[color=lightblue]- La configuration et les aspects software des equipements[/color]\n\nCette mission m'a apporte des bases solides en rigueur process, coordination d'equipe et qualite d'execution.",
+            title: 'Ingénieur logiciel freelance',
+            subtitle: 'Indépendant, temps partiel · janv. 2023 - déc. 2025',
+            description: "[greenpoint][b] MISSION TERMINEE[/b]\n\nTrois ans de missions a temps partiel pour plusieurs clients, avec des cycles courts et des besoins qui evoluent vite:\n\n- Developpement web en React et HTML/JS/CSS natif\n- Applications desktop Electron et bots API Discord et Twitter en TypeScript\n- Back-end Node Express et Java Spring sur MongoDB/PostgreSQL\n- Serveurs TCP/UDP/WebSocket en Java et Node\n- Extensions DLL en C++ et C#\n- Developpement de jeux sous GameMaker et Unity\n\nSur un projet multijoueur confidentiel, j'ai concu un format d'echange compact inspire de Relaxed JSON, avec les outils parser/crawler pour faire dialoguer services et logique de jeu.",
+            links: [],
+          },
+          {
+            title: 'Stagiaire IA pricing & data engineering',
+            subtitle: 'PAARLY, Toulouse · juin 2023 - juil. 2023',
+            description: "[greenpoint][b] MISSION TERMINEE[/b]\n\n- Pipelines de web scraping et d'extraction pour collecter, structurer et traiter des donnees de prix concurrentiels a grande echelle\n- Developpement et integration d'outils IA/ML de pricing: rapprochement de produits, analyse de marche et suivi des prix\n- Traitement de donnees, automatisation et developpement backend pour la veille concurrentielle et la tarification dynamique",
+            links: [],
+          },
+          {
+            title: 'Assistant de production',
+            subtitle: 'ADVEEZ, Toulouse · janv. 2022 - févr. 2022',
+            description: "[purplepoint][b] PREMIERE MISSION (TERMINEE)[/b]\n\nMa premiere experience pro: assistance a la production de solutions electroniques, a la gestion et a la logistique. Elle m'a donne une vision complete de la chaine industrielle, au-dela du simple dev.\n\nJ'y ai observe concretement:\n- La gestion de stock et la tracabilite des composants\n- Les etapes de production et d'assemblage\n- Les flux logistiques de preparation et d'expedition\n- La configuration et les aspects software des equipements",
             links: [],
           },
         ],
@@ -149,7 +213,8 @@ export const starsData: StarData[] = [
     title: { en: 'Projects', fr: 'Projets' },
     code: 'PROJ-003',
     color: '#ffb27a',
-    metalness: 1,
+    surface: 'gas',
+    features: [{ kind: 'ring', inner: 0.64, outer: 0.97, tilt: 0.85 }],
     content: {
       en: {
         description: "A selection of projects I designed and shipped across systems programming, backend architecture, game networking, AI experimentation, and 3D web interfaces. Most of them started as curiosity and ended as production-grade learning labs (and a few started as \"this is probably a bad idea\" moments).",
@@ -321,18 +386,20 @@ export const starsData: StarData[] = [
     title: { en: 'Technical Skills', fr: 'Compétences Techniques' },
     code: 'TECH-004',
     color: '#b8a4ff',
+    surface: 'crystal',
+    features: [],
     content: {
       en: {
         description: "My practical engineering toolbox, built through internships, freelance missions, and long personal projects. I focus on tools that help me ship reliable systems end-to-end (and yes, I actually use what's listed).",
         items: [
           {
             title: 'Languages I Actually Use',
-            description: "C++, C, Java, C#, JavaScript, TypeScript, Python, Go, GML.\n\nI use these depending on problem constraints: performance-critical runtime, backend APIs, gameplay logic, scripting, and fast prototyping. I care less about language fashion and more about choosing the right execution model for the task.",
+            description: "C++, C, Rust, Java, C#, JavaScript, TypeScript, Python, Go, GML.\n\nI use these depending on problem constraints: performance-critical runtime, backend APIs, gameplay logic, scripting, and fast prototyping. I care less about language fashion and more about choosing the right execution model for the task.",
             links: [],
           },
           {
             title: 'Front-End Magic',
-            description: "React, Next.js, Tailwind CSS, Vue, Bootstrap, Three.js.\n\nI build responsive interfaces, component systems, and interactive 3D web experiences. My front-end focus is usability + performance + visual clarity, especially for data-heavy or real-time products.",
+            description: "React, Next.js, Tailwind CSS, Vue, Bootstrap, Three.js, Electron.\n\nI build responsive interfaces, component systems, and interactive 3D web experiences. My front-end focus is usability + performance + visual clarity, especially for data-heavy or real-time products.",
             links: [],
           },
           {
@@ -341,8 +408,18 @@ export const starsData: StarData[] = [
             links: [],
           },
           {
+            title: 'Space & Mission Systems',
+            description: "Yamcs, Yamcs Gateway, Grafana, ROS 2, telemetry and telecommand, spacecraft simulators.\n\nI build and deploy mission control software used by real operators, from data sources and commanding panels to ground-space links and robotics interfaces.",
+            links: [],
+          },
+          {
+            title: 'Security',
+            description: "Security audits, attack-surface reduction, authentication and access control, secure protocols and data flows, space link encryption (CySAT), DevSecOps.\n\nI am specializing in cybersecurity, and I apply it directly to mission control centers and the software that runs them.",
+            links: [],
+          },
+          {
             title: 'DevOps & Tools',
-            description: "Git, GitHub Actions, Docker, Kubernetes, CI/CD, Linux, Jira, Agile.\n\nI use these to make delivery predictable: reproducible environments, automated checks, deployment consistency, and team-friendly workflows. Not flashy, but essential for stable products.",
+            description: "Git, GitHub Actions, Docker, Kubernetes, CI/CD, DevSecOps, Linux, Jira, Agile.\n\nI use these to make delivery predictable: reproducible environments, automated checks, deployment consistency, and team-friendly workflows. Not flashy, but essential for stable products.",
             links: [],
           },
           {
@@ -357,12 +434,12 @@ export const starsData: StarData[] = [
         items: [
           {
             title: 'Langages que j’utilise vraiment',
-            description: "C++, C, Java, C#, JavaScript, TypeScript, Python, Go, GML.\n\nJe les choisis selon le contexte: runtime haute perf, APIs backend, logique gameplay, scripting ou prototypage rapide. Je privilegie le bon outil pour le bon probleme.",
+            description: "C++, C, Rust, Java, C#, JavaScript, TypeScript, Python, Go, GML.\n\nJe les choisis selon le contexte: runtime haute perf, APIs backend, logique gameplay, scripting ou prototypage rapide. Je privilegie le bon outil pour le bon probleme.",
             links: [],
           },
           {
             title: 'Front-end',
-            description: "React, Next.js, Tailwind CSS, Vue, Bootstrap, Three.js.\n\nJe developpe des interfaces responsive, des architectures composants, et des experiences 3D web interactives. Mon objectif: UX claire, perf solide, rendu propre.",
+            description: "React, Next.js, Tailwind CSS, Vue, Bootstrap, Three.js, Electron.\n\nJe developpe des interfaces responsive, des architectures composants, et des experiences 3D web interactives. Mon objectif: UX claire, perf solide, rendu propre.",
             links: [],
           },
           {
@@ -371,8 +448,18 @@ export const starsData: StarData[] = [
             links: [],
           },
           {
+            title: 'Systèmes spatiaux & mission',
+            description: "Yamcs, Yamcs Gateway, Grafana, ROS 2, telemetrie et telecommande, simulateurs de vaisseau.\n\nJe developpe et deploie des logiciels de controle mission utilises par de vrais operateurs, des sources de donnees aux panneaux de commande, jusqu'aux liens sol-espace et aux interfaces robotiques.",
+            links: [],
+          },
+          {
+            title: 'Sécurité',
+            description: "Audits de securite, reduction de la surface d'attaque, authentification et controle d'acces, protocoles et flux de donnees securises, chiffrement des liens spatiaux (CySAT), DevSecOps.\n\nJe me specialise en cybersecurite et je l'applique directement aux centres de controle mission et aux logiciels qui les font tourner.",
+            links: [],
+          },
+          {
             title: 'DevOps & outils',
-            description: "Git, GitHub Actions, Docker, Kubernetes, CI/CD, Linux, Jira, Agile.\n\nJe m'en sers pour fiabiliser la livraison: environnements reproductibles, controles automatiques, deploiements coherents et workflow equipe propre.",
+            description: "Git, GitHub Actions, Docker, Kubernetes, CI/CD, DevSecOps, Linux, Jira, Agile.\n\nJe m'en sers pour fiabiliser la livraison: environnements reproductibles, controles automatiques, deploiements coherents et workflow equipe propre.",
             links: [],
           },
           {
@@ -390,8 +477,8 @@ export const starsData: StarData[] = [
     title: { en: 'Get In Touch', fr: 'Contact' },
     code: 'COMM-005',
     color: '#a4f3ff',
-    metalness: 1,
-    roughness: .4,
+    surface: 'ice',
+    features: [{ kind: 'satellite', radius: 0.8, tilt: 1.05 }],
     content: {
       en: {
         description: "If you are building something technical and ambitious, I would love to discuss it. I am comfortable with both product implementation and deep engineering tasks (including the unglamorous debugging parts).",
@@ -424,7 +511,7 @@ export const starsData: StarData[] = [
           },
           {
             title: 'Availability',
-            description: "Available for a 4-month internship starting June 2026 and remote freelance work whenever.\n\nPreferred domains:\n[color=lightblue]- Software engineering (backend/fullstack)[/color]\n[color=lightblue]- AI engineering and applied ML[/color]\n[color=lightblue]- Embedded and systems programming[/color]\n[color=lightblue]- Distributed and real-time applications[/color]\n[color=lightblue]- 3D graphics or simulation-heavy products[/color]",
+            description: "Open to opportunities and freelance work.\n\nPreferred domains:\n[color=lightblue]- Space systems and mission control software[/color]\n[color=lightblue]- Cybersecurity and DevSecOps[/color]\n[color=lightblue]- Software engineering (backend/fullstack)[/color]\n[color=lightblue]- AI engineering and applied ML[/color]\n[color=lightblue]- Embedded and systems programming[/color]\n[color=lightblue]- Distributed and real-time applications[/color]\n[color=lightblue]- 3D graphics or simulation-heavy products[/color]",
             links: [],
           },
           {
@@ -468,7 +555,7 @@ export const starsData: StarData[] = [
           },
           {
             title: 'Disponibilité',
-            description: "Disponible pour un stage de 4 mois a partir de juin 2026.\n\nDomaines recherches:\n[color=lightblue]- Ingenierie logicielle (backend/fullstack)[/color]\n[color=lightblue]- IA appliquee et machine learning[/color]\n[color=lightblue]- Systemes embarques et programmation bas niveau[/color]\n[color=lightblue]- Architectures distribuees et temps reel[/color]\n[color=lightblue]- Produits 3D, simulation ou visualisation avancee[/color]",
+            description: "Ouvert aux opportunites et aux missions freelance.\n\nDomaines recherches:\n[color=lightblue]- Systemes spatiaux et logiciels de controle mission[/color]\n[color=lightblue]- Cybersecurite et DevSecOps[/color]\n[color=lightblue]- Ingenierie logicielle (backend/fullstack)[/color]\n[color=lightblue]- IA appliquee et machine learning[/color]\n[color=lightblue]- Systemes embarques et programmation bas niveau[/color]\n[color=lightblue]- Architectures distribuees et temps reel[/color]\n[color=lightblue]- Produits 3D, simulation ou visualisation avancee[/color]",
             links: [
               { text: 'Download English Resume', link: '/resume/Aouab Admou - English Resume.pdf' },
               { text: 'Download French Resume', link: '/resume/Aouab Admou - CV FR.pdf' },

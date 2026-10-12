@@ -46,8 +46,8 @@ const ORBIT_SETTLE_RATE = 0.9;
 
 // Fast hop into a planet orbit.
 const TO_PLANET: SpeedProfile = { maxSpeed: 46, accel: 24, decel: 20, lateralAccel: 40 };
-// Relaxed cruise back to the home orbit.
-const TO_HOME: SpeedProfile = { maxSpeed: 20, accel: 3.5, decel: 3.5, lateralAccel: 6 };
+// Brisk cruise back to the home orbit.
+const TO_HOME: SpeedProfile = { maxSpeed: 36, accel: 11, decel: 8, lateralAccel: 14 };
 
 // Leaving a planet heads straight for the nearest stretch of the home orbit:
 // joins are searched within this angle of the closest home point first.

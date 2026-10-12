@@ -9,11 +9,13 @@ import { useLanguageStore } from '../stores/languageStore';
 import { useNavigationStore } from '../stores/navigationStore';
 import { useIsMobile } from '../util/useIsMobile';
 import { wasJustDragged } from '../flight/look';
+import PlanetFeatures from '../scene/PlanetFeatures';
+import { planetSurface } from '../scene/planetSurfaces';
 
 // Fresnel rim: bright at the silhouette, transparent facing the camera.
 const createAtmosphere = (color: string) =>
   new ShaderMaterial({
-    uniforms: { glowColor: { value: new Color(color) }, intensity: { value: 0.9 } },
+    uniforms: { glowColor: { value: new Color(color) }, intensity: { value: 0.6 } },
     vertexShader: `
       varying vec3 vNormal;
       varying vec3 vView;
@@ -38,8 +40,10 @@ const createAtmosphere = (color: string) =>
     depthWrite: false,
   });
 
-const Star: React.FC<StarData> = ({ id, position, title, color, metalness, roughness }) => {
+const Star: React.FC<StarData> = ({ id, position, title, color, surface, features }) => {
   const groupRef = useRef<Group>(null);
+  const bodyRef = useRef<Mesh>(null);
+  const map = useMemo(() => planetSurface(surface, color), [surface, color]);
   const atmosphereRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const isMobile = useIsMobile();
@@ -64,8 +68,9 @@ const Star: React.FC<StarData> = ({ id, position, title, color, metalness, rough
     const s = hovered && canInteract ? 1.18 : 1;
     // Frame-rate independent critically-damped approach.
     groupRef.current.scale.lerp(targetScale.set(s, s, s), 1 - Math.exp(-delta * 10));
+    if (bodyRef.current) bodyRef.current.rotation.y += 0.05 * delta;
     const glow = (atmosphereRef.current?.material as ShaderMaterial | undefined)?.uniforms.intensity;
-    if (glow) glow.value += ((hovered ? 1.6 : 0.9) - glow.value) * (1 - Math.exp(-delta * 8));
+    if (glow) glow.value += ((hovered ? 1.3 : 0.6) - glow.value) * (1 - Math.exp(-delta * 8));
   });
 
   const handleClick = () => {
@@ -91,21 +96,23 @@ const Star: React.FC<StarData> = ({ id, position, title, color, metalness, rough
   return (
     <group position={position}>
       <group ref={groupRef}>
-        <mesh onClick={handleClick} {...hoverHandlers}>
-          <sphereGeometry args={[0.5, 64, 64]} />
-          <meshPhysicalMaterial
-            color={color}
+        <mesh ref={bodyRef} onClick={handleClick} {...hoverHandlers}>
+          {surface === 'crystal' ? (
+            <icosahedronGeometry args={[0.5, 2]} />
+          ) : (
+            <sphereGeometry args={[0.5, 64, 64]} />
+          )}
+          <meshStandardMaterial
+            map={map}
             emissive={color}
-            emissiveIntensity={0.08}
-            metalness={metalness ?? 0}
-            roughness={roughness ?? 0.6}
-            clearcoat={0.6}
-            clearcoatRoughness={0.4}
-            sheen={1}
-            sheenColor={color}
+            emissiveIntensity={surface === 'crystal' ? 0.12 : 0.05}
+            roughness={surface === 'ice' ? 0.5 : surface === 'crystal' ? 0.7 : 0.85}
+            metalness={0}
+            flatShading={surface === 'crystal'}
           />
         </mesh>
-        <mesh ref={atmosphereRef} scale={1.22} material={atmosphere}>
+        <PlanetFeatures features={features} color={color} />
+        <mesh ref={atmosphereRef} scale={1.1} material={atmosphere}>
           <sphereGeometry args={[0.5, 48, 48]} />
         </mesh>
       </group>

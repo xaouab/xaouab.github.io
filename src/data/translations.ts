@@ -2,7 +2,7 @@
 export const translations = {
   en: {
     frontPage: {
-      role: 'Software engineer building mission control, real-time and 3D systems',
+      role: 'Space systems & cybersecurity engineer at JAOPS',
       subtitle: 'Choose a planet to fly there, or drag to look around',
     },
     flight: {
@@ -19,7 +19,7 @@ export const translations = {
   },
   fr: {
     frontPage: {
-      role: 'Ingénieur logiciel : contrôle de mission, temps réel et 3D',
+      role: 'Ingénieur systèmes spatiaux & cybersécurité chez JAOPS',
       subtitle: 'Choisissez une planète pour vous y rendre, ou faites glisser pour regarder autour',
     },
     flight: {
